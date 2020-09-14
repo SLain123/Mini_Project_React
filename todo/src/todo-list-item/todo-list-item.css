@@ -1,0 +1,42 @@
+.todo-item {
+    margin: 10px 0;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px #37518D dashed;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.todo-item__text {
+    font-size: 20px;
+    padding: 0 15px;
+    overflow-x: hidden;
+    flex-basis: 75%;
+}
+
+.todo-item__icon-block {
+    display: flex;
+    margin-right: 1%;
+    flex-basis: 5%;
+}
+
+.todo-item__icon {
+    padding: 5px 10px;
+    margin-right: 5px;
+    background: #FFE6D2;
+    border-radius: 5px;
+}
+
+.todo-item__icon:hover {
+    background: #FFCC66;
+}
+
+.todo-item__star {
+    color: #CC9900;
+}
+
+.todo-item__bin {
+    color: #990000;
+}

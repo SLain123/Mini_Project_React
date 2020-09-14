@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Grandstander:wght@400;700&display=swap');
+
+body {
+    background: #9FD0D0;
+    font-family: 'Grandstander', cursive;
+    box-sizing: border-box;
+}
+
+.main {
+    width: 50%;
+    margin: auto;
+}
