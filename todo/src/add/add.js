@@ -7,7 +7,7 @@ const Add = () => {
             <input 
                 className="add__str"
                 type="text"
-                placeholder="Введите текст задачи для добавления в список"/>
+                placeholder="Введите текст задачи для добавления"/>
             <button className="add__btn">Добавить</button>
         </div>
     )

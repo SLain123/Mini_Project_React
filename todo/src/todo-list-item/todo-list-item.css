@@ -27,6 +27,8 @@
     margin-right: 5px;
     background: #FFE6D2;
     border-radius: 5px;
+    min-width: 20px;
+    text-align: center;
 }
 
 .todo-item__icon:hover {
@@ -39,4 +41,9 @@
 
 .todo-item__bin {
     color: #990000;
+}
+
+.todo-item_like {
+    color: #572904;
+    text-shadow: 1px 1px 5px gold, -1px -1px 5px gold;
 }
