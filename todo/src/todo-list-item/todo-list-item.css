@@ -6,7 +6,6 @@
     align-items: center;
     border: 1px #37518D dashed;
     border-radius: 5px;
-    cursor: pointer;
 }
 
 .todo-item__text {
@@ -14,6 +13,7 @@
     padding: 0 15px;
     overflow-x: hidden;
     flex-basis: 75%;
+    cursor: pointer;
 }
 
 .todo-item__icon-block {
@@ -29,13 +29,14 @@
     border-radius: 5px;
     min-width: 20px;
     text-align: center;
+    cursor: pointer;
 }
 
 .todo-item__icon:hover {
     background: #FFCC66;
 }
 
-.todo-item__star {
+.todo-item__alarm {
     color: #CC9900;
 }
 
@@ -43,7 +44,16 @@
     color: #990000;
 }
 
-.todo-item_like {
+.todo-item_alarm {
     color: #572904;
     text-shadow: 1px 1px 5px gold, -1px -1px 5px gold;
+}
+
+.todo-item_done {
+    text-decoration: line-through;
+}
+
+.todo-item_inactive {
+    color: grey;
+    opacity: .8;
 }
