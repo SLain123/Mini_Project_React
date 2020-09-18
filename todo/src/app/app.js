@@ -8,10 +8,27 @@ import './app.css';
 
 class App extends Component {
     state = {
-        taskList: [ {taskName: 'Drink something', alarm: true, id: 1},
-                    {taskName: 'Eat something', id: 2},
-                    {taskName: 'Code something else', alarm: true, id: 3},
-                    {taskName: 'Sleep a lot of sleep', id: 4} ]
+        taskList: [ this.createItem('Drink something', 1),
+                    this.createItem('Eat something', 2),
+                    this.createItem('Code something else', 3),
+                    this.createItem('Sleep a lot of sleep', 4)]
+    }
+
+    createItem(text, id) {
+        return {
+            taskName: text,
+            alarm: false,
+            id: id,
+            done: false
+        }
+    }
+
+    generateId = () => {
+        if(!this.state.taskList[this.state.taskList.length - 1].id) {
+            return 0;
+        } else {
+            return this.state.taskList[this.state.taskList.length - 1].id;
+        }
     }
 
     deleteItem = id => {
@@ -26,12 +43,14 @@ class App extends Component {
         })
     }
 
-    createItem = (taskName, id) => {
+    addItem = (taskName) => {
         this.setState(({taskList}) => {
             let arrCopy = [...taskList];
+            let lastId = this.generateId();
+
             arrCopy.push({
                 taskName: taskName,
-                id: id
+                id: lastId + 1
             })
 
             return {
@@ -51,12 +70,12 @@ class App extends Component {
         return result;
     }
 
-    toggleDone = id => {
+    toggleParam = (id, param) => {
         this.setState(({taskList}) => {
             const idIndex = taskList.findIndex(el => el.id === id);
             const copyArr = [...taskList];
             const copyObj = {...copyArr[idIndex]};
-            copyObj.done = !copyObj.done;
+            copyObj.[param] = !copyObj.[param];
             copyArr[idIndex] = copyObj;
 
             return {
@@ -65,24 +84,11 @@ class App extends Component {
         })
     }
 
-    toggleAlarm = id => {
-        this.setState(({taskList}) => {
-            const idIndex = taskList.findIndex(el => el.id === id);
-            const copyArr = [...taskList];
-            const copyObj = {...copyArr[idIndex]};
-            copyObj.alarm = !copyObj.alarm;
-            copyArr[idIndex] = copyObj;
-
-            return {
-                taskList: copyArr
-            }
-        })
-    }
 
     render() {
         const listLength = this.state.taskList.length;
         const numOfAlarm = this.countAlarm();
-        
+
         return (
             <div className="main">
                 <AppHeader
@@ -92,11 +98,10 @@ class App extends Component {
                 <TodoList 
                 taskList={this.state.taskList}
                 onDelete={this.deleteItem}
-                toggleDone={this.toggleDone}
-                toggleAlarm={this.toggleAlarm}/>
+                toggleParam={this.toggleParam}/>
                 <AddItem
                 listLength={listLength}
-                onCreate={this.createItem}/>
+                onCreate={this.addItem}/>
             </div>
         )
     }

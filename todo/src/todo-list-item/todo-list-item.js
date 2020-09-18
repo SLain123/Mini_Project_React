@@ -5,7 +5,7 @@ import './todo-list-item.css';
 
 class TodoListItem extends Component {
     render() {
-        const {taskName, onDelete, done, alarm, toggleDone, toggleAlarm} = this.props;
+        const {taskName, onDelete, done, alarm, transferParam, id} = this.props;
         let textStyle = 'todo-item__text';
         let alarmBtnStyle = 'todo-item__alarm todo-item__icon';
 
@@ -22,13 +22,13 @@ class TodoListItem extends Component {
             <div className="todo-item">
                 <span 
                 className={textStyle}
-                onClick={toggleDone}>
+                onClick={() => transferParam(id, 'done')}>
                     {taskName}
                 </span>
                 <div className="todo-item__icon-block">
                     <span 
                     className={alarmBtnStyle}
-                    onClick={toggleAlarm}>
+                    onClick={() => transferParam(id, 'alarm')}>
                         <FontAwesomeIcon icon={faExclamation}/>
                     </span>
                     <span 
