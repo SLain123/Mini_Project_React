@@ -3,6 +3,8 @@ import './app-header.css';
 
 class AppHeader extends Component {
     render() {
+        const {all, countAlarm} = this.props;
+        
         return (
             <div
             className="header header_pos">
@@ -12,7 +14,7 @@ class AppHeader extends Component {
                 </h1>
                 <span 
                 className="stats stats_pos">
-                    5 записей, из них важных 0
+                    {all} записей, из них важных {countAlarm}
                 </span>
             </div>
         )

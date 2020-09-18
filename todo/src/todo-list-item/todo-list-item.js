@@ -4,30 +4,8 @@ import { faExclamation, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import './todo-list-item.css';
 
 class TodoListItem extends Component {
-    state = {
-        done: false,
-        alarm: false
-    };
-
-    onAlarm = () => {
-        this.setState((state) => {
-            return {
-                alarm: !state.alarm
-            }
-        })
-    };
-
-    onDone = () => {
-        this.setState((state) => {
-            return {
-                done: !state.done
-            }
-        })
-    }
-
     render() {
-        const {taskName} = this.props;
-        const {done, alarm} = this.state;
+        const {taskName, onDelete, done, alarm, toggleDone, toggleAlarm} = this.props;
         let textStyle = 'todo-item__text';
         let alarmBtnStyle = 'todo-item__alarm todo-item__icon';
 
@@ -44,17 +22,18 @@ class TodoListItem extends Component {
             <div className="todo-item">
                 <span 
                 className={textStyle}
-                onClick={this.onDone}>
+                onClick={toggleDone}>
                     {taskName}
                 </span>
                 <div className="todo-item__icon-block">
                     <span 
                     className={alarmBtnStyle}
-                    onClick={this.onAlarm}>
+                    onClick={toggleAlarm}>
                         <FontAwesomeIcon icon={faExclamation}/>
                     </span>
                     <span 
-                    className="todo-item__bin todo-item__icon">
+                    className="todo-item__bin todo-item__icon"
+                    onClick={onDelete}>
                         <FontAwesomeIcon icon={faTrashAlt}/>
                     </span>
                 </div>
