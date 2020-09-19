@@ -19,8 +19,57 @@ class App extends Component {
             taskName: taskName,
             alarm: false,
             id: id,
-            done: false
+            done: false,
+            hide: false
         }
+    }
+
+    hideAllOrUnhide = trueOrNot => {
+        this.setState(({taskList}) => {
+            const copyArr = JSON.parse(JSON.stringify(taskList));
+            copyArr.map(obj => {
+                obj.hide = trueOrNot;
+                return obj;
+            })
+
+            return {
+                taskList: copyArr
+            }
+        })
+    }
+
+    checkEqualTextForSearch = (text, obj) => {
+        let result = true;
+        const {taskName} = obj;
+        for(let i = 0; i < text.length; i++) {
+            if(text[i] !== taskName[i]) {
+                result = false
+            }
+        }
+        return result;
+    }
+
+    getSearchPhrase = (text) => {
+        this.hideAllOrUnhide(true);
+        const {taskList} = this.state;
+        taskList.forEach(obj => {
+            const {id} = obj;
+            if(this.checkEqualTextForSearch(text, obj)) {
+                this.toggleParam(id, 'hide', 'toggle');
+            }
+        })
+    }
+
+    displayFilterTasks = param => {
+        const {taskList} = this.state;
+        this.hideAllOrUnhide(false);
+
+        taskList.forEach(obj => {
+            const {id} = obj;
+            if(obj.[param] === false) {
+                this.toggleParam(id, 'hide');
+            }
+        })
     }
 
     generateId = () => {
@@ -50,7 +99,10 @@ class App extends Component {
 
             arrCopy.push({
                 taskName: taskName,
-                id: lastId + 1
+                id: lastId + 1,
+                alarm: false,
+                done: false,
+                hide: false
             })
 
             return {
@@ -70,12 +122,16 @@ class App extends Component {
         return result;
     }
 
-    toggleParam = (id, param) => {
+    toggleParam = (id, param, act) => {
         this.setState(({taskList}) => {
             const idIndex = taskList.findIndex(el => el.id === id);
             const copyArr = [...taskList];
             const copyObj = {...copyArr[idIndex]};
-            copyObj.[param] = !copyObj.[param];
+            if(act === 'toggle') {
+                copyObj.[param] = !copyObj.[param];
+            } else {
+                copyObj.[param] = true;
+            }
             copyArr[idIndex] = copyObj;
 
             return {
@@ -94,14 +150,17 @@ class App extends Component {
                 <AppHeader
                 all={listLength}
                 countAlarm={numOfAlarm}/>
-                <Search/>
+                <Search
+                getSearchPhrase={this.getSearchPhrase}
+                hideAllOrUnhide={this.hideAllOrUnhide}
+                displayFilterTasks={this.displayFilterTasks}/>
                 <TodoList 
                 taskList={this.state.taskList}
                 onDelete={this.deleteItem}
                 toggleParam={this.toggleParam}/>
                 <AddItem
                 listLength={listLength}
-                onCreate={this.addItem}/>
+                addItem={this.addItem}/>
             </div>
         )
     }

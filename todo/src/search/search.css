@@ -34,8 +34,14 @@
     cursor: pointer;
 }
 
+.search-btn_active {
+    background: #37518D;
+    color: #C6D2EC;
+}
+
 .search-btn:hover {
     background: #37518D;
+    opacity: .8;
     color: #C6D2EC;
 }
 

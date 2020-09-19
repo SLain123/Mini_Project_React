@@ -8,6 +8,10 @@
     border-radius: 5px;
 }
 
+.todo-item_hide {
+    display: none;
+}
+
 .todo-item__text {
     font-size: 20px;
     padding: 0 15px;

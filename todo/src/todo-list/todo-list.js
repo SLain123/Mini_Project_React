@@ -15,7 +15,7 @@ class TodoList extends Component {
                     id={id}
                     key={id} 
                     onDelete={() => onDelete(id)}
-                    transferParam={toggleParam}
+                    toggleParam={toggleParam}
                     />
                 })}
             </div>

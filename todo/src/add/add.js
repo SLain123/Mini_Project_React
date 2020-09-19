@@ -14,9 +14,9 @@ class AddItem extends Component {
 
     onSubmitForm = e => {
         e.preventDefault();
-        const {onCreate} = this.props;
+        const {addItem} = this.props;
         if(this.state.taskName) {
-            onCreate(this.state.taskName);
+            addItem(this.state.taskName);
             this.setState({
                 taskName: ''
             })
