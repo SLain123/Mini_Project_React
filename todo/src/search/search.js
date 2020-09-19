@@ -3,9 +3,7 @@ import './search.css';
 
 class Search extends Component {
 state = {
-    all: true,
-    alarm: false,
-    done: false
+    status: 'all'
 }
 
     getInputValue = e => {
@@ -13,39 +11,25 @@ state = {
         getSearchPhrase(e.target.value);
     }
 
-    getBtnStyle = (style, activeBtn) => {
-        let resultStyle = `search-btn ${style}`;
-        if(activeBtn) {
+    getBtnStyle = btn => {
+        let resultStyle = `search-btn`;
+        if(this.state.status === btn) {
             resultStyle += ' search-btn_active';
         }
-
+    
         return resultStyle;
     }
 
-    chahgeStyleToFalse = () => {
-        this.setState(() => {
-            return {
-                all: false,
-                alarm: false,
-                done: false
-            }
-        })
-    }
-
     changeStyle = btn => {
-        this.chahgeStyleToFalse()
         this.setState(() => {
             return {
-                [btn]: true
+                status: btn
             }
         })
     }
 
     render() {
         const {hideAllOrUnhide, displayFilterTasks} = this.props;
-        const allBtnStyle = this.getBtnStyle('search-btn__all', this.state.all);
-        const alarmBtnStyle = this.getBtnStyle('search-btn__alarm', this.state.alarm);
-        const doneBtnStyle = this.getBtnStyle('search-btn__done', this.state.done);
 
         return (
             <div
@@ -58,7 +42,7 @@ state = {
                 <div
                     className="search-btn__block">
                     <button
-                    className={allBtnStyle}
+                    className={`search-btn__all ${this.getBtnStyle('all')}`}
                     onClick={() => {
                         hideAllOrUnhide(false);
                         this.changeStyle('all');
@@ -66,7 +50,7 @@ state = {
                         Все
                     </button>
                     <button
-                    className={alarmBtnStyle}
+                    className={`search-btn__alarm ${this.getBtnStyle('alarm')}`}
                     onClick={() => {
                         displayFilterTasks('alarm');
                         this.changeStyle('alarm');
@@ -74,7 +58,7 @@ state = {
                         Важные
                     </button>
                     <button
-                    className={doneBtnStyle}
+                    className={`search-btn__done ${this.getBtnStyle('done')}`}
                     onClick={() => {
                         displayFilterTasks('done');
                         this.changeStyle('done');

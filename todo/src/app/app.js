@@ -38,23 +38,12 @@ class App extends Component {
         })
     }
 
-    checkEqualTextForSearch = (text, obj) => {
-        let result = true;
-        const {taskName} = obj;
-        for(let i = 0; i < text.length; i++) {
-            if(text[i] !== taskName[i]) {
-                result = false
-            }
-        }
-        return result;
-    }
-
     getSearchPhrase = (text) => {
         this.hideAllOrUnhide(true);
         const {taskList} = this.state;
         taskList.forEach(obj => {
             const {id} = obj;
-            if(this.checkEqualTextForSearch(text, obj)) {
+            if(obj.taskName.toLowerCase().indexOf(text.toLowerCase()) > -1) {
                 this.toggleParam(id, 'hide', 'toggle');
             }
         })
