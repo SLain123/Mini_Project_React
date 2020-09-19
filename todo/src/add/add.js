@@ -2,22 +2,42 @@ import React, { Component } from 'react';
 import './add.css';
 
 class AddItem extends Component {
+    state = {
+        taskName: ''
+    }
+
+    getInputValue = e => {
+        this.setState({
+            taskName: e.target.value
+        })
+    }
+
+    onSubmitForm = e => {
+        e.preventDefault();
+        const {onCreate} = this.props;
+        if(this.state.taskName) {
+            onCreate(this.state.taskName);
+            this.setState({
+                taskName: ''
+            })
+        }
+    }
 
     render() {
-        const {onCreate} = this.props;
-
         return (
-            <div className="add add_pos">
+            <form 
+                className="add add_pos"
+                onSubmit={this.onSubmitForm}>
                 <input 
                     className="add__str"
                     type="text"
-                    placeholder="Введите текст задачи для добавления"/>
-                <button 
-                className="add__btn"
-                onClick={() => onCreate('kill')}>
+                    placeholder="Введите текст задачи для добавления"
+                    onChange={this.getInputValue}
+                    value={this.state.taskName}/>
+                <button className="add__btn">
                     Добавить
                 </button>
-            </div>
+            </form>
         )
     }
 }

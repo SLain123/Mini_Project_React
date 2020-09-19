@@ -14,9 +14,9 @@ class App extends Component {
                     this.createItem('Sleep a lot of sleep', 4)]
     }
 
-    createItem(text, id) {
+    createItem(taskName, id) {
         return {
-            taskName: text,
+            taskName: taskName,
             alarm: false,
             id: id,
             done: false
