@@ -39,3 +39,21 @@
     background: #37518D;
     color: #C6D2EC;
 }
+
+@media (max-width: 450px) {
+    .add {
+        flex-flow: column;
+    }
+
+    .add__str {
+        flex-basis: none;
+        width: 95%;
+    }
+
+    .add__btn {
+        flex-basis: none;
+        width: 40%;
+        margin-top: 30px;
+        min-height: 41px;
+    }
+}

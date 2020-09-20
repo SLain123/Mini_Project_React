@@ -7,6 +7,30 @@ body {
 }
 
 .main {
-    width: 50%;
+    width: 40%;
     margin: auto;
+}
+
+@media (max-width: 1980px) {
+    .main {
+        width: 50%;
+    }
+}
+
+@media (max-width: 1600px) {
+    .main {
+        width: 70%;
+    }
+}
+
+@media (max-width: 1240px) {
+    .main {
+        width: 90%;
+    }
+}
+
+@media (max-width: 780px) {
+    .main {
+        width: 98%;
+    }
 }

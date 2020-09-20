@@ -54,3 +54,23 @@
 .search-btn__all {
     flex-basis: 25%;
 }
+
+@media (max-width: 780px) {
+    .search {
+        flex-flow: column;
+    }
+
+    .search-btn {
+        width: 30%;
+    }
+
+    .search-btn__block {
+        margin-top: 40px;
+    }
+}
+
+@media (max-width: 450px) {
+    .search-btn {
+        width: 50%;
+    }
+}
