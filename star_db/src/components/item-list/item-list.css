@@ -1,0 +1,25 @@
+.list {
+    background: #474444;
+    flex-basis: 40%;
+    border-radius: 5px;
+    padding: 0;
+    border: 3px solid #3B3E3B;
+}
+
+.list_pos {
+    margin: 0;
+}
+
+.list__item {
+    list-style-type: none;
+    padding: 20px;
+    border-top: 3px solid #3B3E3B;
+    cursor: pointer;
+    font-size: 20px;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+.list__item:first-child {
+    border-top: none;
+}
