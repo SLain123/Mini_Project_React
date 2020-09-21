@@ -2,6 +2,9 @@
     background: #474444;
     border-radius: 5px;
     display: flex;
+    padding: 10px 0;
+    align-items: center;
+    justify-content: space-around;
 }
 
 .random-planet_pos {
@@ -9,14 +12,14 @@
 }
 
 .random-planet__pic {
-    width: 300px;
-    height: 300px;
+    width: 350px;
+    height: 350px;
     border-radius: 10px;
-    margin: 20px;
+    margin-left: 5px;
 }
 
 .random-planet__info-block {
-    margin-left: 5%;
+    margin-left: 1%;
 }
 
 .random-planet__info-title {
