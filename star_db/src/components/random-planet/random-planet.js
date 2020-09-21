@@ -10,18 +10,16 @@ class RandomPlanet extends Component {
     }
 
     allData = new LoadData();
-
     state = {}
 
     updatePlanet() {
-        const id = this._random;
-        this.allData.getUnit('planets', id).then(data => {
+        this.allData.getUnit('planets', this._random).then(data => {
             this.setState(data)
         })
     }
 
     render() {
-        const {id = this._random, name, population, rotationPeriod, diameter, orbitalPeriod, gravity, climate} = this.state;
+        const {id = this._random, name, population, rotationPeriod, diameter, orbitalPeriod, gravity, climate, terrain} = this.state;
         return (
             <div className="random-planet random-planet_pos">
                 <img 
@@ -39,6 +37,7 @@ class RandomPlanet extends Component {
                         <li className="random-planet__info-details-item">Orbital Period: {orbitalPeriod}</li>
                         <li className="random-planet__info-details-item">Gravity: {gravity}</li>
                         <li className="random-planet__info-details-item">Climate: {climate}</li>
+                        <li className="random-planet__info-details-item">Terrain: {terrain}</li>
                     </ul>
                 </div>
             </div>

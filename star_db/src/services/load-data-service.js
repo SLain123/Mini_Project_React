@@ -29,29 +29,34 @@ class LoadData {
                         diameter: data.diameter,
                         orbitalPeriod: data.orbital_period,
                         gravity: data.gravity,
-                        climate: data.climate
+                        climate: data.climate,
+                        terrain: data.terrain
                     };
                     case 'people': 
                     return {
                         id,
                         name: data.name,
-                        population: data.population,
-                        rotationPeriod: data.rotation_period,
-                        diameter: data.diameter,
-                        orbitalPeriod: data.orbital_period,
-                        gravity: data.gravity,
-                        climate: data.climate
+                        eyeColor: data.eye_color,
+                        birthYear: data.birth_year,
+                        gender: data.gender,
+                        hairColor: data.hair_color,
+                        height: data.height,
+                        mass: data.mass,
+                        skinColor: data.skin_color
                     };
                     case 'starships': 
                     return {
                         id,
                         name: data.name,
-                        population: data.population,
-                        rotationPeriod: data.rotation_period,
-                        diameter: data.diameter,
-                        orbitalPeriod: data.orbital_period,
-                        gravity: data.gravity,
-                        climate: data.climate
+                        model: data.model,
+                        cargoCapacity: data.cargo_capacity,
+                        consumables: data.consumables,
+                        cost: data.cost_in_credits,
+                        hyperDriveRating: data.hyperdrive_rating,
+                        length: data.length,
+                        maxAtmospheringSpeed: data.max_atmosphering_speed,
+                        passengers: data.passengers,
+                        starshipClass: data.starship_class
                     };
                     default: return 'No exist data type';
                 }
