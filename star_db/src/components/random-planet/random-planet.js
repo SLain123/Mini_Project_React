@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import LoadData from '../../services/load-data-service';
 import Spinner from '../spinner/spinner';
+import ErrorMessage from '../error-message/error-message';
 import './random-planet.css';
 
 class RandomPlanet extends Component {
@@ -12,22 +13,39 @@ class RandomPlanet extends Component {
     allData = new LoadData();
     state = {
         planet: {},
-        random: (Math.floor(Math.random() * 19)) + 1,
-        load: true
+        random: (Math.floor(Math.random() * 25)) + 1,
+        load: true,
+        error: false
     }
 
     updatePlanet() {
         const {random} = this.state;
-        this.allData.getUnit('planets', random).then(data => {
-            this.setState({
-                planet: data,
-                load: false
+        this.allData.getUnit('planets', random)
+            .then(data => {
+                this.setState({
+                    planet: data,
+                    load: false
+                })
             })
-        })
+            .catch(error => {
+                this.setState({
+                    load: false,
+                    error: true
+                })
+                console.log(error);
+            })
     }
 
     render() {
-        const body = this.state.load ? <Spinner/> :  <RandomPlanetView planet={this.state.planet} random={this.state.random}/>
+        const {load, error, planet, random} = this.state;
+
+        let body = <RandomPlanetView planet={planet} random={random}/>;
+        if(load) {
+            body = <Spinner/>
+        } else if(!load && error) {
+            body = <ErrorMessage/>
+        }
+
         return (
             <div className="random-planet random-planet_pos">
                 {body}
@@ -39,11 +57,17 @@ class RandomPlanet extends Component {
 const RandomPlanetView = (props) => {
     const {name, population, rotationPeriod, diameter, orbitalPeriod, gravity, climate, terrain} = props.planet;
     const random = props.random;
+
+    let source = `https://starwars-visualguide.com/assets/img/planets/${random}.jpg`;
+    if(random < 2 || random > 19) {
+        source = 'https://starwars-visualguide.com/assets/img/placeholder.jpg'
+    }
+    
     return (
         <Fragment>
                 <img 
                     className="random-planet__pic"
-                    src={`https://starwars-visualguide.com/assets/img/planets/${random}.jpg`}
+                    src={source}
                     alt="planet"
                     width="300"
                     height="300"/>

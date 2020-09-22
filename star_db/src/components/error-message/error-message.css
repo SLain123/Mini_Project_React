@@ -1,0 +1,21 @@
+.error {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.error__pic {
+    max-width: 300px;
+    height: 150px;
+    margin-bottom: 40px;
+}
+
+.error__text {
+    color: #E34A4B;
+    font-size: 22px;
+    text-align: center;
+}
+
+.error__text_big {
+    font-size: 30px;
+}
