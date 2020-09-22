@@ -5,7 +5,7 @@
     padding: 10px 0;
     align-items: center;
     justify-content: space-around;
-    min-height: 450px;
+    min-height: 500px;
 }
 
 .random-planet_pos {
@@ -41,4 +41,6 @@
     padding: 10px 20px 0 20px;
     border-top: 3px solid #3B3E3B;
     letter-spacing: 3px;
+    max-width: 390px;
+    width: 85%;
 }

@@ -2,6 +2,10 @@ import React, {Component} from 'react';
 import './item-list.css';
 
 class ItemList extends Component {
+    state = {
+        people: null
+    }
+
     render() {
         return (
             <ul className="list list_pos">

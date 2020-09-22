@@ -5,26 +5,27 @@ import ErrorMessage from '../error-message/error-message';
 import './random-planet.css';
 
 class RandomPlanet extends Component {
-    constructor() {
-        super()
-        this.updatePlanet();
-    }
-
     allData = new LoadData();
     state = {
-        planet: {},
-        random: (Math.floor(Math.random() * 25)) + 1,
+        planet: null,
+        random: null,
         load: true,
         error: false
     }
 
+    componentDidMount() {
+        this.updatePlanet();
+        setInterval(this.updatePlanet.bind(this), 5000);
+    }
+
     updatePlanet() {
-        const {random} = this.state;
+        const random = (Math.floor(Math.random() * 25)) + 1;
         this.allData.getUnit('planets', random)
             .then(data => {
                 this.setState({
                     planet: data,
-                    load: false
+                    load: false,
+                    random: random
                 })
             })
             .catch(error => {
@@ -62,7 +63,7 @@ const RandomPlanetView = (props) => {
     if(random < 2 || random > 19) {
         source = 'https://starwars-visualguide.com/assets/img/placeholder.jpg'
     }
-    
+
     return (
         <Fragment>
                 <img 
