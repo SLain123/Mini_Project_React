@@ -13,7 +13,27 @@ class LoadData {
 
     getAllUnit(unit) {
         return this._getData(`${unit}/`).then(data => {
-            return data.results;
+            return data.results.map((data, i) => {
+                switch(unit) {
+                    case 'planets':
+                    return {
+                        id: i + 1,
+                        name: data.name
+                    };
+                    case 'people':
+                    return {
+                        id: i + 1,
+                        name: data.name
+                    };
+                    case 'starships':
+                    return {
+                        id: i + 1,
+                        name: data.name
+                    };
+                    default: return 'No exist data type';
+                }
+                
+            });
         })
     }
 
@@ -63,5 +83,11 @@ class LoadData {
             })
     }
 }
+
+// const dataTest = new LoadData();
+
+// dataTest.getAllUnit('starships').then(p => {
+//     console.log(p);
+// })
 
 export default LoadData;

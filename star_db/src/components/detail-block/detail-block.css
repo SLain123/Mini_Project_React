@@ -1,16 +1,17 @@
 .detail {
-    flex-basis: 58%;
+    flex-basis: 68%;
     background: #474444;
     border-radius: 5px;
     display: flex;
-    height: 300px;
+    align-items: center;
+    height: 430px;
 }
 
 .detail__pic {
-    min-width: 180px;
     max-width: 230px;
+    min-width: 210px;
     flex-basis: 45%;
-    height: 230px;
+    height: 320px;
     border-radius: 10px;
     margin: 20px;
 }

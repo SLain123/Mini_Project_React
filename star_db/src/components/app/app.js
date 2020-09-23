@@ -7,6 +7,16 @@ import Details from '../detail-block/detail-block';
 import './app.css';
 
 class App extends Component {
+    state = {
+        activeId: 1
+    }
+
+    clickOnPerson = id => {
+        this.setState({
+            activeId: id
+        })
+    }
+
     render() {
         return (
             <div className="main">
@@ -15,8 +25,10 @@ class App extends Component {
                     <RandomPlanet/>
                 </section>
                 <section className="bottom-part">
-                    <ItemList/>
-                    <Details/>
+                    <ItemList
+                    clickOnPerson={this.clickOnPerson}/>
+                    <Details
+                    activeId={this.state.activeId}/>
                 </section>
             </div>
         )
