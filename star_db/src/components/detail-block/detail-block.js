@@ -1,11 +1,15 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import LoadData from '../../services/load-data-service';
+import Spinner from '../spinner/spinner';
+import ErrorMessage from '../error-message/error-message';
 import './detail-block.css';
 
 class Details extends Component {
     allData = new LoadData();
     state = {
         person: {},
+        load: true,
+        error: false
     }
 
     componentDidMount() {
@@ -22,15 +26,32 @@ class Details extends Component {
         this.allData.getUnit('people', this.props.activeId)
             .then(person => {
                 this.setState({
-                    person: person
+                    person: person,
+                    load: false
                 })
+            })
+            .catch(error => {
+                this.setState({
+                    load: false,
+                    error: true
+                })
+                console.log(error);
             })
     }
 
     render() {
+        const {load, error} = this.state;
+        let body = <DetailView allParam={this.state.person}/>
+        if(load) {
+            body = <Spinner/>
+        } else if(!load && error) {
+            body = <ErrorMessage/>
+        }
+
         return (
-            <DetailView
-            allParam={this.state.person}/>
+            <div className="detail detail_pos">
+                {body}
+            </div>
         )
     }
 }
@@ -39,7 +60,7 @@ const DetailView = props => {
     const {name, eyeColor, birthYear, gender, hairColor, height, mass, skinColor, id = 1} = props.allParam;
     
     return (
-        <div className="detail detail_pos">
+            <Fragment>
                 <img 
                     className="detail__pic"
                     src={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`}
@@ -58,7 +79,7 @@ const DetailView = props => {
                         <li className="detail__info-details-item">Skin color: {skinColor}</li>
                     </ul>
                 </div>
-            </div>
+            </Fragment>
     )
 }
 
