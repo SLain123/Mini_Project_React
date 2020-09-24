@@ -1,53 +1,19 @@
 import React, {Component, Fragment} from 'react';
-import LoadData from '../../services/load-data-service';
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../error-message/error-message';
 import './detail-block.css';
 
 class Details extends Component {
-    allData = new LoadData();
-    state = {
-        person: {},
-        load: true,
-        error: false
-    }
-
-    componentDidMount() {
-        this.updatePerson()
-    }
-
-    componentDidUpdate(prevProp) {
-        if(prevProp.activeId !== this.props.activeId) {
-            this.updatePerson()
-        }
-    }
-
-    updatePerson() {
-        this.allData.getUnit('people', this.props.activeId)
-            .then(person => {
-                this.setState({
-                    person: person,
-                    load: false
-                })
-            })
-            .catch(error => {
-                this.setState({
-                    load: false,
-                    error: true
-                })
-                console.log(error);
-            })
-    }
-
     render() {
-        const {load, error} = this.state;
-        let body = <DetailView allParam={this.state.person}/>
+        const {person, load, error} = this.props;
+        let body = <DetailView allParam={person}/>
+
         if(load) {
             body = <Spinner/>
         } else if(!load && error) {
             body = <ErrorMessage/>
         }
-
+        
         return (
             <div className="detail detail_pos">
                 {body}

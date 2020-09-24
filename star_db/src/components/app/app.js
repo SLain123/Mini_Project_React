@@ -1,20 +1,13 @@
 import React, {Component} from 'react';
 import Header from '../header/header';
 import RandomPlanet from '../random-planet/random-planet';
-import ItemList from '../item-list/item-list';
-import Details from '../detail-block/detail-block';
+import PeoplePage from '../people-page/people-page';
 
 import './app.css';
 
 class App extends Component {
-    state = {
-        activeId: 1
-    }
-
-    clickOnPerson = id => {
-        this.setState({
-            activeId: id
-        })
+    componentDidCatch(error) {
+        console.log(`Global error: ${error}`);
     }
 
     render() {
@@ -25,10 +18,7 @@ class App extends Component {
                     <RandomPlanet/>
                 </section>
                 <section className="bottom-part">
-                    <ItemList
-                    clickOnPerson={this.clickOnPerson}/>
-                    <Details
-                    activeId={this.state.activeId}/>
+                    <PeoplePage/>
                 </section>
             </div>
         )

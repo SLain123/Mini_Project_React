@@ -10,12 +10,20 @@ class RandomPlanet extends Component {
         planet: null,
         random: null,
         load: true,
-        error: false
+        error: false,
+        globalError: false
     }
 
     componentDidMount() {
         this.updatePlanet();
         setInterval(this.updatePlanet.bind(this), 5000);
+    }
+
+    componentDidCatch(error) {
+        this.setState({
+            globalError: true
+        })
+        console.log(error);
     }
 
     updatePlanet() {
@@ -38,12 +46,12 @@ class RandomPlanet extends Component {
     }
 
     render() {
-        const {load, error, planet, random} = this.state;
+        const {load, error, planet, random, globalError} = this.state;
 
         let body = <RandomPlanetView planet={planet} random={random}/>;
         if(load) {
             body = <Spinner/>
-        } else if(!load && error) {
+        } else if((!load && error) || globalError) {
             body = <ErrorMessage/>
         }
 
@@ -55,7 +63,7 @@ class RandomPlanet extends Component {
     }
 }
 
-const RandomPlanetView = (props) => {
+const RandomPlanetView = props => {
     const {name, population, rotationPeriod, diameter, orbitalPeriod, gravity, climate, terrain} = props.planet;
     const random = props.random;
 

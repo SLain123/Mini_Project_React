@@ -1,41 +1,13 @@
-import React, {Component, Fragment} from 'react';
-import LoadData from '../../services/load-data-service';
+import React, {Component} from 'react';
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../error-message/error-message';
 import './item-list.css';
 
 class ItemList extends Component {
-    allData = new LoadData();
-    state = {
-        people: [],
-        load: true,
-        error: false
-    }
-
-    componentDidMount() {
-        this.getAllPeople();
-    }
-
-    getAllPeople() {
-        return this.allData.getAllUnit('people')
-        .then(data => {
-            this.setState({
-                people: data,
-                load: false
-            })
-        })
-        .catch(error => {
-            this.setState({
-                load: false,
-                error: true
-            })
-            console.log(error);
-        })
-    }
-
     render() {
-        const {load, error} = this.state;
-        let body = <ItemListView peopleList={this.state.people} clickOnPerson={this.props.clickOnPerson}/>;
+        const {people, load, error, clickOnPerson} = this.props;
+        let body = <ItemListView people={people} clickOnPerson={clickOnPerson}/>;
+        
         if(load) {
             body = <Spinner/>
         } else if(!load && error) {
@@ -62,7 +34,7 @@ const ItemListView = props => {
             </li>
     };
 
-    const list = props.peopleList.map(people => {
+    const list = props.people.map(people => {
         return createItem(people.id, people.name);
     });
 
