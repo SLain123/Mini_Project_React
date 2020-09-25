@@ -5,8 +5,8 @@ import './item-list.css';
 
 class ItemList extends Component {
     render() {
-        const {people, load, error, clickOnPerson} = this.props;
-        let body = <ItemListView people={people} clickOnPerson={clickOnPerson}/>;
+        const {allUnits, load, error, clickOnPerson} = this.props;
+        let body = <ItemListView allUnits={allUnits} clickOnPerson={clickOnPerson}/>;
         
         if(load) {
             body = <Spinner/>
@@ -34,8 +34,8 @@ const ItemListView = props => {
             </li>
     };
 
-    const list = props.people.map(people => {
-        return createItem(people.id, people.name);
+    const list = props.allUnits.map(unit => {
+        return createItem(unit.id, unit.name);
     });
 
     return list;

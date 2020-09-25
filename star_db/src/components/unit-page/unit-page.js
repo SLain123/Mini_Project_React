@@ -2,43 +2,34 @@ import React, { Component } from 'react';
 import LoadData from '../../services/load-data-service';
 import ItemList from '../item-list/item-list';
 import Details from '../detail-block/detail-block';
-import ErrorMessage from '../error-message/error-message';
-import './people-page.css';
+import './unit-page.css';
 
-class PeoplePage extends Component {
+class UnitPage extends Component {
     allData = new LoadData();
     state = {
         activeId: 1,
-        people: [],
-        person: {},
+        allUnits: [],
+        units: {},
         load: true,
         error: false,
-        globalError: false
     }
 
     componentDidMount() {
-        this.getAllPeople();
-        this.updatePerson();
+        this.getAllUnit();
+        this.updateUnit();
     }
 
     componentDidUpdate(prevProp, prevState) {
         if(prevState.activeId !== this.state.activeId) {
-            this.updatePerson()
+            this.updateUnit()
         }
     }
 
-    componentDidCatch(error) {
-        this.setState({
-            globalError: true
-        })
-        console.log(error);
-    }
-
-    getAllPeople() {
-        return this.allData.getAllUnit('people')
+    getAllUnit() {
+        return this.allData.getAllUnit(this.props.request)
         .then(data => {
             this.setState({
-                people: data,
+                allUnits: data,
                 load: false
             })
         })
@@ -51,11 +42,11 @@ class PeoplePage extends Component {
         })
     }
 
-    updatePerson() {
-        this.allData.getUnit('people', this.state.activeId)
-            .then(person => {
+    updateUnit() {
+        this.allData.getUnit(this.props.request, this.state.activeId)
+            .then(units => {
                 this.setState({
-                    person: person,
+                    units: units,
                     load: false
                 })
             })
@@ -75,26 +66,26 @@ class PeoplePage extends Component {
     }
 
     render() {
-        const {person, people, load, error, globalError} = this.state;
-
-        if(globalError) {
-            return <ErrorMessage/>
-        }
+        const {units, allUnits, load, error} = this.state;
+        const {request, data} = this.props;
 
         return (
-            <div className="people-page">
+            <div className="unit-page">
                 <ItemList 
-                    people={people}
+                    allUnits={allUnits}
                     load={load}
                     error={error}
                     clickOnPerson={this.clickOnPerson}/>
                 <Details
-                    person={person}
+                    units={units}
                     load={load}
-                    error={error}/>
+                    error={error}
+                    request={request}
+                    getImage={this.allData.getImage}
+                    data={data}/>
             </div>
         )
     }
 }
 
-export default PeoplePage;
+export default UnitPage;

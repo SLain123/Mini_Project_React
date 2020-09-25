@@ -82,6 +82,22 @@ class LoadData {
                 }
             })
     }
+
+    getImage(unit, id) {
+        const baseURL = 'https://starwars-visualguide.com/assets/img'
+        switch(unit) {
+            case('people'):
+                return `${baseURL}/characters/${id}.jpg`;
+
+            case 'planets':
+                return `${baseURL}/planets/${id}.jpg`;
+                
+            case 'startships':
+                return `${baseURL}/starships/${id}.jpg`;
+            
+            default: return 'No exist data type';
+        }
+    }
 }
 
 // const dataTest = new LoadData();

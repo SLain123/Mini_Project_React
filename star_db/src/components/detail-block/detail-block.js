@@ -1,12 +1,17 @@
 import React, {Component, Fragment} from 'react';
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../error-message/error-message';
+import TestError from '../test-error/test-error';
 import './detail-block.css';
 
 class Details extends Component {
     render() {
-        const {person, load, error} = this.props;
-        let body = <DetailView allParam={person}/>
+        const {units, load, error, request, getImage, data} = this.props;
+        let body = <DetailView 
+            allParam={units} 
+            request={request}
+            getImage={getImage}
+            data={data}/>
 
         if(load) {
             body = <Spinner/>
@@ -23,27 +28,31 @@ class Details extends Component {
 }
 
 const DetailView = props => {
-    const {name, eyeColor, birthYear, gender, hairColor, height, mass, skinColor, id = 1} = props.allParam;
-    
+
+    const {name, id = 1} = props.allParam;
+    const imgUrl = props.getImage(props.request, id);
+    const keys = Object.keys(props.data);
+
+    const list = keys.map(key => {
+        const name = props.data[key];
+        const item = props.allParam[key];
+            return <li className="detail__info-details-item" key={name}>{name}: {item}</li>
+        })
+
     return (
             <Fragment>
                 <img 
                     className="detail__pic"
-                    src={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`}
+                    src={imgUrl}
                     alt="unit"
                     width="200"
                     height="230"/>
                 <div className="detail__info-block">
                     <h1 className="detail__info-title">{name}</h1>
                     <ul className="detail__info-detals-list">
-                        <li className="detail__info-details-item">Gender: {gender}</li>
-                        <li className="detail__info-details-item">Height: {height}</li>
-                        <li className="detail__info-details-item">Mass: {mass}</li>
-                        <li className="detail__info-details-item">Birt year: {birthYear}</li>
-                        <li className="detail__info-details-item">Eye color: {eyeColor}</li>
-                        <li className="detail__info-details-item">Hair color: {hairColor}</li>
-                        <li className="detail__info-details-item">Skin color: {skinColor}</li>
+                        {list}
                     </ul>
+                    <TestError/>
                 </div>
             </Fragment>
     )

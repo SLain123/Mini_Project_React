@@ -1,0 +1,10 @@
+.test-error {
+    width: 200px;
+    height: 40px;
+    background-color: tomato;
+    color: white;
+    margin: 5px 0;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+}

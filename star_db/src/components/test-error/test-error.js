@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './test-error.css';
 
 class TestError extends Component {
     state = {
@@ -10,7 +11,7 @@ class TestError extends Component {
             this.foo.bar = 0;
         }
         return (
-            <button onClick={() => this.setState({renderError: true})}>Error</button>
+            <button className="test-error" onClick={() => this.setState({renderError: true})}>Get Error</button>
         )
     }
 }
