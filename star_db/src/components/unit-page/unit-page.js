@@ -79,7 +79,6 @@ class UnitPage extends Component {
     render() {
         const {units, allUnits, load, error, imageUrl} = this.state;
         const {request, data} = this.props;
-        console.log(this.state);
 
         return (
             <div className="unit-page">

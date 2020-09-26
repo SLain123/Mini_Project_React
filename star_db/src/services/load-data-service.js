@@ -14,7 +14,7 @@ class LoadData {
     getAllUnit(unit) {
         return this._getData(`${unit}/`).then(data => {
             return data.results.map(data => {
-                console.log(data.url);
+
                 switch(unit) {
                     case 'planets':
                     return {
@@ -101,7 +101,7 @@ class LoadData {
                 genURL = `${baseURL}/planets/${id}.jpg`;
                 break;
                 
-            case 'startships':
+            case 'starships':
                 genURL = `${baseURL}/starships/${id}.jpg`;
                 break;
             

@@ -11,7 +11,9 @@ class TestError extends Component {
             this.foo.bar = 0;
         }
         return (
-            <button className="test-error" onClick={() => this.setState({renderError: true})}>Get Error</button>
+            <div className="test-error">
+                <button className="test-error__btn" onClick={() => this.setState({renderError: true})}>Get Error</button>
+            </div>
         )
     }
 }
