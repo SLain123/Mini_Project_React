@@ -18,6 +18,28 @@ class App extends Component {
         skinColor: "Skin color"
     }
 
+    planetsStore = {
+        population: "Population", 
+        rotationPeriod: 'Rotation period', 
+        diameter: 'Diameter', 
+        orbitalPeriod: 'Orbital period', 
+        gravity: 'Gravity', 
+        climate: 'Climate',
+        terrain: 'Terrain'
+    }
+
+    starshipsStore = {
+        model: 'Model',
+        cargoCapacity:'Cargo capacity',
+        consumables: 'Consumables',
+        cost: 'Cost incredits',
+        hyperDriveRating: 'Hyperdrive rating',
+        length: 'Length',
+        maxAtmospheringSpeed: 'Max atmosphering speed',
+        passengers: 'Passengers',
+        starshipClass: 'Starship class'
+    }
+
     render() {
         return (
             <ErrorBoundy>
@@ -35,8 +57,16 @@ class App extends Component {
                                 request="people"
                                 data={this.peopleStore}/>
                         </ErrorBoundy>
-                        {/* <UnitPage
-                        request="planets"/> */}
+                        <ErrorBoundy>
+                            <UnitPage 
+                                request="planets"
+                                data={this.planetsStore}/>
+                        </ErrorBoundy>
+                        <ErrorBoundy>
+                            <UnitPage 
+                                request="starships"
+                                data={this.starshipsStore}/>
+                        </ErrorBoundy>
                     </section>
                 </div>
             </ErrorBoundy>

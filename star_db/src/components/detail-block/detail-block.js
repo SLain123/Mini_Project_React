@@ -6,11 +6,12 @@ import './detail-block.css';
 
 class Details extends Component {
     render() {
-        const {units, load, error, request, getImage, data} = this.props;
+
+        const {units, load, error, request, data, imageUrl} = this.props;
         let body = <DetailView 
             allParam={units} 
             request={request}
-            getImage={getImage}
+            imageUrl={imageUrl}
             data={data}/>
 
         if(load) {
@@ -28,27 +29,25 @@ class Details extends Component {
 }
 
 const DetailView = props => {
-
-    const {name, id = 1} = props.allParam;
-    const imgUrl = props.getImage(props.request, id);
     const keys = Object.keys(props.data);
 
     const list = keys.map(key => {
-        const name = props.data[key];
-        const item = props.allParam[key];
-            return <li className="detail__info-details-item" key={name}>{name}: {item}</li>
-        })
+    const name = props.data[key];
+    const item = props.allParam[key];
+        return <li className="detail__info-details-item" key={name}>{name}: {item}</li>
+    });
+    
 
     return (
             <Fragment>
                 <img 
                     className="detail__pic"
-                    src={imgUrl}
+                    src={props.imageUrl}
                     alt="unit"
                     width="200"
                     height="230"/>
                 <div className="detail__info-block">
-                    <h1 className="detail__info-title">{name}</h1>
+                    <h1 className="detail__info-title">{props.allParam.name}</h1>
                     <ul className="detail__info-detals-list">
                         {list}
                     </ul>

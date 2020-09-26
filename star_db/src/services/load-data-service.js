@@ -1,7 +1,7 @@
 class LoadData {
     _swapi = 'https://swapi.dev/api/';
 
-    async _getData(url) {
+    _getData = async (url) => {
         const request = await fetch(`${this._swapi}${url}`);
         if (!request.ok) {
             throw new Error(`Ошибка при загрузке ${request.url}: ${request.status}`);
@@ -13,21 +13,22 @@ class LoadData {
 
     getAllUnit(unit) {
         return this._getData(`${unit}/`).then(data => {
-            return data.results.map((data, i) => {
+            return data.results.map(data => {
+                console.log(data.url);
                 switch(unit) {
                     case 'planets':
                     return {
-                        id: i + 1,
+                        id: this.getId(data.url),
                         name: data.name
                     };
                     case 'people':
                     return {
-                        id: i + 1,
+                        id: this.getId(data.url),
                         name: data.name
                     };
                     case 'starships':
                     return {
-                        id: i + 1,
+                        id: this.getId(data.url),
                         name: data.name
                     };
                     default: return 'No exist data type';
@@ -35,6 +36,11 @@ class LoadData {
                 
             });
         })
+    }
+
+    getId = url => {
+        const regExp = /\/([0-9]*)\/$/;
+        return url.match(regExp)[1];
     }
 
     getUnit(unit, id) {
@@ -83,27 +89,42 @@ class LoadData {
             })
     }
 
-    getImage(unit, id) {
-        const baseURL = 'https://starwars-visualguide.com/assets/img'
+    getImage = async (unit, id) => {
+        const baseURL = 'https://starwars-visualguide.com/assets/img';
+        let genURL;
         switch(unit) {
-            case('people'):
-                return `${baseURL}/characters/${id}.jpg`;
+            case 'people':
+                genURL = `${baseURL}/characters/${id}.jpg`;
+                break;
 
             case 'planets':
-                return `${baseURL}/planets/${id}.jpg`;
+                genURL = `${baseURL}/planets/${id}.jpg`;
+                break;
                 
             case 'startships':
-                return `${baseURL}/starships/${id}.jpg`;
+                genURL = `${baseURL}/starships/${id}.jpg`;
+                break;
             
-            default: return 'No exist data type';
+            default: genURL = 'No exist data type';
         }
-    }
+        
+        return await fetch(genURL)
+            .then(request => {
+                if(!request.ok) {
+                    return 'https://starwars-visualguide.com/assets/img/placeholder.jpg';
+                } else {
+                    return genURL;
+                }
+            });
+        }
 }
 
-// const dataTest = new LoadData();
+// const data = new LoadData();
 
-// dataTest.getAllUnit('starships').then(p => {
-//     console.log(p);
-// })
+// data._getData(`starships/`).then(data => {
+//     console.log(data);
+// });
+
+// console.log(data.getId('https://swapi.dev/api/starships/5/'));
 
 export default LoadData;

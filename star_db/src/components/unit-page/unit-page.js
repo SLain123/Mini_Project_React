@@ -7,21 +7,24 @@ import './unit-page.css';
 class UnitPage extends Component {
     allData = new LoadData();
     state = {
-        activeId: 1,
+        activeId: 2,
         allUnits: [],
         units: {},
         load: true,
         error: false,
+        imageUrl: null
     }
 
     componentDidMount() {
         this.getAllUnit();
         this.updateUnit();
+        this.getImage();
     }
 
     componentDidUpdate(prevProp, prevState) {
         if(prevState.activeId !== this.state.activeId) {
             this.updateUnit()
+            this.getImage()
         }
     }
 
@@ -65,9 +68,18 @@ class UnitPage extends Component {
         })
     }
 
+    getImage = () => {
+        this.allData.getImage(this.props.request, this.state.activeId).then(url => {
+            this.setState({
+                imageUrl: url
+            })
+        })
+    }
+
     render() {
-        const {units, allUnits, load, error} = this.state;
+        const {units, allUnits, load, error, imageUrl} = this.state;
         const {request, data} = this.props;
+        console.log(this.state);
 
         return (
             <div className="unit-page">
@@ -81,7 +93,7 @@ class UnitPage extends Component {
                     load={load}
                     error={error}
                     request={request}
-                    getImage={this.allData.getImage}
+                    imageUrl={imageUrl}
                     data={data}/>
             </div>
         )
