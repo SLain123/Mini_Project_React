@@ -66,10 +66,10 @@ class RandomPlanet extends Component {
     }
 }
 
-const RenderPlanet = 
-    ({name, population, rotationPeriod, diameter, orbitalPeriod, gravity, climate, terrain, random}) => {
-
+const RenderPlanet = ({planet, random}) => {
+    const {name, population, rotationPeriod, diameter, orbitalPeriod, gravity, climate, terrain} = planet;
     let source = `https://starwars-visualguide.com/assets/img/planets/${random}.jpg`;
+    
     if(random < 2 || random > 19) {
         source = 'https://starwars-visualguide.com/assets/img/placeholder.jpg'
     }
