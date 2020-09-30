@@ -78,25 +78,34 @@ class UnitPage extends Component {
 
     render() {
         const {units, allUnits, load, error, imageUrl} = this.state;
-        const {request, data} = this.props;
-
-        return (
-            <div className="unit-page">
-                <ItemList 
-                    allUnits={allUnits}
-                    load={load}
-                    error={error}
-                    clickOnPerson={this.clickOnPerson}/>
-                <Details
-                    units={units}
-                    load={load}
-                    error={error}
-                    request={request}
-                    imageUrl={imageUrl}
-                    data={data}/>
-            </div>
-        )
+        const {data} = this.props;
+        return <RenderPage 
+            units={units} 
+            allUnits={allUnits} 
+            load={load} 
+            error={error} 
+            imageUrl={imageUrl} 
+            data={data}
+            clickOnPerson={this.clickOnPerson}
+            />
     }
 }
 
+const RenderPage = ({units, allUnits, load, error, imageUrl, data, clickOnPerson}) => {
+    return (
+        <div className="unit-page">
+            <ItemList 
+                allUnits={allUnits}
+                load={load}
+                error={error}
+                clickOnPerson={clickOnPerson}/>
+            <Details
+                units={units}
+                load={load}
+                error={error}
+                imageUrl={imageUrl}
+                data={data}/>
+        </div>
+    )
+}
 export default UnitPage;

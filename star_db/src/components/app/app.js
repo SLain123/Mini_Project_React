@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Header from '../header/header';
 import RandomPlanet from '../random-planet/random-planet';
 import UnitPage from '../unit-page/unit-page';
@@ -7,8 +7,8 @@ import TestError from '../test-error/test-error';
 
 import './app.css';
 
-class App extends Component {
-    peopleStore = {
+const App = () => {
+const peopleStore = {
         gender: "Gender",
         height: "Height",
         mass: "Mass",
@@ -16,9 +16,9 @@ class App extends Component {
         eyeColor: "Eye color",
         hairColor: "Hair color",
         skinColor: "Skin color"
-    }
+    };
 
-    planetsStore = {
+const planetsStore = {
         population: "Population", 
         rotationPeriod: 'Rotation period', 
         diameter: 'Diameter', 
@@ -26,9 +26,9 @@ class App extends Component {
         gravity: 'Gravity', 
         climate: 'Climate',
         terrain: 'Terrain'
-    }
+    };
 
-    starshipsStore = {
+const starshipsStore = {
         model: 'Model',
         cargoCapacity:'Cargo capacity',
         consumables: 'Consumables',
@@ -40,38 +40,36 @@ class App extends Component {
         starshipClass: 'Starship class'
     }
 
-    render() {
-        return (
-            <ErrorBoundy>
-                <div className="main">
-                    <Header/>
-                    <ErrorBoundy>
-                        <section className="top-part">
-                            <RandomPlanet/>
-                        </section>
-                    </ErrorBoundy>
-                    <TestError/>
-                    <section className="bottom-part">
-                        <ErrorBoundy>
-                            <UnitPage 
-                                request="people"
-                                data={this.peopleStore}/>
-                        </ErrorBoundy>
-                        <ErrorBoundy>
-                            <UnitPage 
-                                request="planets"
-                                data={this.planetsStore}/>
-                        </ErrorBoundy>
-                        <ErrorBoundy>
-                            <UnitPage 
-                                request="starships"
-                                data={this.starshipsStore}/>
-                        </ErrorBoundy>
+    return (
+        <ErrorBoundy>
+            <div className="main">
+                <Header/>
+                <ErrorBoundy>
+                    <section className="top-part">
+                        <RandomPlanet/>
                     </section>
-                </div>
-            </ErrorBoundy>
-        )
-    }
+                </ErrorBoundy>
+                <TestError/>
+                <section className="bottom-part">
+                    <ErrorBoundy>
+                        <UnitPage 
+                            request="people"
+                            data={peopleStore}/>
+                    </ErrorBoundy>
+                    <ErrorBoundy>
+                        <UnitPage 
+                            request="planets"
+                            data={planetsStore}/>
+                    </ErrorBoundy>
+                    <ErrorBoundy>
+                        <UnitPage 
+                            request="starships"
+                            data={starshipsStore}/>
+                    </ErrorBoundy>
+                </section>
+            </div>
+        </ErrorBoundy>
+    )
 }
 
 export default App;

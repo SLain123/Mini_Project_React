@@ -11,6 +11,11 @@ class LoadData {
         return data;
     }
 
+    _getId = url => {
+        const regExp = /\/([0-9]*)\/$/;
+        return url.match(regExp)[1];
+    }
+
     getAllUnit(unit) {
         return this._getData(`${unit}/`).then(data => {
             return data.results.map(data => {
@@ -18,17 +23,17 @@ class LoadData {
                 switch(unit) {
                     case 'planets':
                     return {
-                        id: this.getId(data.url),
+                        id: this._getId(data.url),
                         name: data.name
                     };
                     case 'people':
                     return {
-                        id: this.getId(data.url),
+                        id: this._getId(data.url),
                         name: data.name
                     };
                     case 'starships':
                     return {
-                        id: this.getId(data.url),
+                        id: this._getId(data.url),
                         name: data.name
                     };
                     default: return 'No exist data type';
@@ -36,11 +41,6 @@ class LoadData {
                 
             });
         })
-    }
-
-    getId = url => {
-        const regExp = /\/([0-9]*)\/$/;
-        return url.match(regExp)[1];
     }
 
     getUnit(unit, id) {
@@ -118,13 +118,5 @@ class LoadData {
             });
         }
 }
-
-// const data = new LoadData();
-
-// data._getData(`starships/`).then(data => {
-//     console.log(data);
-// });
-
-// console.log(data.getId('https://swapi.dev/api/starships/5/'));
 
 export default LoadData;

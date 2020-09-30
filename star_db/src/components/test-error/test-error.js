@@ -12,7 +12,11 @@ class TestError extends Component {
         }
         return (
             <div className="test-error">
-                <button className="test-error__btn" onClick={() => this.setState({renderError: true})}>Get Error</button>
+                <button 
+                    className="test-error__btn" 
+                    onClick={() => this.setState({renderError: true})}>
+                        Get Error
+                </button>
             </div>
         )
     }
