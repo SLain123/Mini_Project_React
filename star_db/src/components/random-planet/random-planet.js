@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import LoadData from '../../services/load-data-service';
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../error-message/error-message';
+import PropTypes from 'prop-types';
 import './random-planet.css';
 
 class RandomPlanet extends Component {
@@ -14,9 +15,17 @@ class RandomPlanet extends Component {
         globalError: false
     }
 
+    static defaultProps = {
+        interval: 6000
+    }
+
+    static propTypes = {
+        interval: PropTypes.number
+    }
+
     componentDidMount() {
         this.updatePlanet();
-        setInterval(this.updatePlanet.bind(this), 5000);
+        setInterval(this.updatePlanet.bind(this), this.props.interval);
     }
 
     componentDidCatch(error) {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import LoadData from '../../services/load-data-service';
 import ItemList from '../item-list/item-list';
 import Details from '../detail-block/detail-block';
+import PropTypes from 'prop-types';
 import './unit-page.css';
 
 class UnitPage extends Component {
@@ -13,6 +14,11 @@ class UnitPage extends Component {
         load: true,
         error: false,
         imageUrl: null
+    }
+
+    static propTypes = {
+        request: PropTypes.string.isRequired,
+        data: PropTypes.object.isRequired
     }
 
     componentDidMount() {

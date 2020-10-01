@@ -2,6 +2,7 @@ import React from 'react';
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../error-message/error-message';
 import TestError from '../test-error/test-error';
+import PropTypes from 'prop-types';
 import './detail-block.css';
 
 const Details = ({units, load, error, data, imageUrl}) => {
@@ -22,6 +23,14 @@ const Details = ({units, load, error, data, imageUrl}) => {
             {body}
         </div>
     )
+}
+
+Details.propType = {
+    units: PropTypes.object.isRequired,
+    load: PropTypes.bool.isRequired,
+    error: PropTypes.bool.isRequired,
+    imageUrl: PropTypes.string.isRequired,
+    data: PropTypes.object.isRequired
 }
 
 const RenderDetail = ({allParam, data, imageUrl}) => {

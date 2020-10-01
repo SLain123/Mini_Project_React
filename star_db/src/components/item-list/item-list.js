@@ -1,6 +1,7 @@
 import React from 'react';
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../error-message/error-message';
+import PropTypes from 'prop-types';
 import './item-list.css';
 
 const ItemList = ({allUnits, load, error, clickOnPerson}) => {
@@ -20,6 +21,13 @@ const ItemList = ({allUnits, load, error, clickOnPerson}) => {
             {body}
         </ul>
     )
+}
+
+ItemList.propTypes = {
+    allUnits: PropTypes.array.isRequired,
+    load: PropTypes.bool.isRequired,
+    error: PropTypes.bool.isRequired,
+    clickOnPerson: PropTypes.func.isRequired
 }
 
 const RenderListItem = ({clickOnPerson, allUnits}) => {
