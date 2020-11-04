@@ -8,6 +8,12 @@
     white-space: nowrap;
 }
 
+.header__logo-link {
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+}
+
 .nav_pos {
     margin-left: 100px;
 }

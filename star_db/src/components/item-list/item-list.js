@@ -1,13 +1,14 @@
 import React from 'react';
+import {withRouter} from 'react-router-dom';
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../error-message/error-message';
 import PropTypes from 'prop-types';
 import './item-list.css';
 
-const ItemList = ({allUnits, load, error, clickOnPerson}) => {
+const ItemList = ({allUnits, load, error, history}) => {
     let body = <RenderListItem 
         allUnits={allUnits} 
-        clickOnPerson={clickOnPerson}
+        history={history}
         />;
     
     if(load) {
@@ -26,18 +27,16 @@ const ItemList = ({allUnits, load, error, clickOnPerson}) => {
 ItemList.propTypes = {
     allUnits: PropTypes.array.isRequired,
     load: PropTypes.bool.isRequired,
-    error: PropTypes.bool.isRequired,
-    clickOnPerson: PropTypes.func.isRequired
+    error: PropTypes.bool.isRequired
 }
 
-const RenderListItem = ({clickOnPerson, allUnits}) => {
+const RenderListItem = ({allUnits, history}) => {
     const createItem = (id, name) => {
-        return <li 
+        return <li onClick={() => {
+            history.push(id)
+        }}
             className="list__item" 
-            key={id}
-            onClick={() => {
-                clickOnPerson(id)
-            }}>
+            key={id}>
                 {name}
             </li>
     };
@@ -49,4 +48,4 @@ const RenderListItem = ({clickOnPerson, allUnits}) => {
     return list;
 }
 
-export default ItemList;
+export default withRouter(ItemList);

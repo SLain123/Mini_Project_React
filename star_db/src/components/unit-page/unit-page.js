@@ -8,7 +8,6 @@ import './unit-page.css';
 class UnitPage extends Component {
     allData = new LoadData();
     state = {
-        activeId: 2,
         allUnits: [],
         units: {},
         load: true,
@@ -27,8 +26,8 @@ class UnitPage extends Component {
         this.getImage();
     }
 
-    componentDidUpdate(prevProp, prevState) {
-        if(prevState.activeId !== this.state.activeId) {
+    componentDidUpdate(prevProp) {
+        if(prevProp.url.match.params.id !== this.props.url.match.params.id) {
             this.updateUnit()
             this.getImage()
         }
@@ -52,11 +51,11 @@ class UnitPage extends Component {
     }
 
     updateUnit() {
-        this.allData.getUnit(this.props.request, this.state.activeId)
+        this.allData.getUnit(this.props.request, this.props.url.match.params.id)
             .then(units => {
                 this.setState({
                     units: units,
-                    load: false
+                    load: false,
                 })
             })
             .catch(error => {
@@ -68,14 +67,8 @@ class UnitPage extends Component {
             })
     }
 
-    clickOnPerson = id => {
-        this.setState({
-            activeId: id
-        })
-    }
-
     getImage = () => {
-        this.allData.getImage(this.props.request, this.state.activeId).then(url => {
+        this.allData.getImage(this.props.request, this.props.url.match.params.id).then(url => {
             this.setState({
                 imageUrl: url
             })
@@ -83,35 +76,24 @@ class UnitPage extends Component {
     }
 
     render() {
-        const {units, allUnits, load, error, imageUrl} = this.state;
+        const {allUnits, load, error, units, imageUrl} = this.state;
         const {data} = this.props;
-        return <RenderPage 
-            units={units} 
-            allUnits={allUnits} 
-            load={load} 
-            error={error} 
-            imageUrl={imageUrl} 
-            data={data}
-            clickOnPerson={this.clickOnPerson}
-            />
+        
+        return (
+            <div className="unit-page">
+                <ItemList 
+                    allUnits={allUnits}
+                    load={load}
+                    error={error} />
+                <Details 
+                    load={load}
+                    error={error}
+                    units={units}
+                    data={data}
+                    imageUrl={imageUrl}/>
+            </div>
+        )
     }
 }
 
-const RenderPage = ({units, allUnits, load, error, imageUrl, data, clickOnPerson}) => {
-    return (
-        <div className="unit-page">
-            <ItemList 
-                allUnits={allUnits}
-                load={load}
-                error={error}
-                clickOnPerson={clickOnPerson}/>
-            <Details
-                units={units}
-                load={load}
-                error={error}
-                imageUrl={imageUrl}
-                data={data}/>
-        </div>
-    )
-}
 export default UnitPage;

@@ -5,6 +5,7 @@ import RandomPlanet from '../random-planet/random-planet';
 import UnitPage from '../unit-page/unit-page';
 import ErrorBoundy from '../error-boundy/error-boundy';
 import TestError from '../test-error/test-error';
+import ErrorMessage from '../error-message/error-message';
 
 import './app.css';
 
@@ -55,18 +56,19 @@ const App = () => {
                     <section className="bottom-part">
                         <ErrorBoundy>
                             <Switch>
-                                <Route path='/' render={
+                                <Route exact path='/' render={
                                     () => <h1 className="main-title">Select the appropriate section in the <span className="main-title_green">HEADER</span> above to get information</h1>
                                     } />
-                                <Route path='/people' component={
-                                    () => <UnitPage request="people" data={peopleStore} />
+                                <Route path='/people/:id' component={
+                                    (url) => <UnitPage request="people" data={peopleStore} url={url} />
                                     } />
-                                <Route path='/planets' component={
-                                    () => <UnitPage request="planets" data={planetsStore} />
+                                <Route path='/planets/:id' component={
+                                    (url) => <UnitPage request="planets" data={planetsStore} url={url}/>
                                 } />
-                                <Route path='/starships' component={
-                                    () => <UnitPage request="starships" data={starshipsStore} />
+                                <Route path='/starships/:id' component={
+                                    (url) => <UnitPage request="starships" data={starshipsStore} url={url} />
                                 } />
+                                <Route component={ErrorMessage} />
                             </Switch>
                         </ErrorBoundy>
                     </section>
