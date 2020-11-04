@@ -24,3 +24,22 @@
     margin: 0 30px;
     font-size: 22px;
 }
+
+@media (max-width: 779px) {
+    .header {
+        max-width: 100%;
+    }
+    .nav_pos {
+        margin: 0 auto;
+    }
+
+    .nav__link {
+        margin: 0 10px;
+    }
+}
+
+@media (max-width: 470px) {
+    .header {
+        flex-flow: column;
+    }
+}

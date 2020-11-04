@@ -27,6 +27,7 @@
     font-size: 55px;
     margin: 10px 0;
     letter-spacing: 3px;
+    text-align: center;
 }
 
 .random-planet__info-detals-list {
@@ -43,4 +44,15 @@
     letter-spacing: 3px;
     max-width: 390px;
     width: 85%;
+}
+
+@media (max-width: 779px) {
+    .random-planet {
+        flex-flow: column;
+    }
+
+    .random-planet__pic {
+        width: 250px;
+        height: 250px;
+    }
 }

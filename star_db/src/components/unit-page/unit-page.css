@@ -3,3 +3,11 @@
     display: flex;
     justify-content: space-between;
 }
+
+@media (max-width: 470px) {
+    .unit-page {
+        flex-flow: column;
+        max-width: 100%;
+        margin: 10px auto;
+    }
+}

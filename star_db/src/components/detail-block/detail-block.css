@@ -40,3 +40,24 @@
     border-top: 3px solid #3B3E3B;
     letter-spacing: 3px;
 }
+
+@media (max-width: 1024px) {
+    .detail {
+        flex-flow: column;
+    }
+}
+
+@media (max-width: 780px) {
+    .detail__pic {
+        max-width: 200px;
+        min-width: 0;
+        max-height: 250px;
+        margin: 10px;
+    }
+}
+
+@media (max-width: 470px) {
+    .detail {
+        margin-top: 15px;
+    }
+}
