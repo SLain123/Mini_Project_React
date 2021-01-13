@@ -1,14 +1,14 @@
 import React from 'react';
 import Task from '../task';
 
-const TaskList = ({ tasks, changeDone }) => {
+const TaskList = ({ tasks, changeRemoveTask }) => {
     const itemList = tasks.map((task) => {
         const { id, isDone } = task;
         const completedStyle = isDone ? 'completed' : null;
 
         return (
             <li className={completedStyle} key={id}>
-                <Task {...task} changeDone={changeDone} />
+                <Task {...task} changeRemoveTask={changeRemoveTask} />
             </li>
         );
     });

@@ -34,19 +34,28 @@ class App extends Component {
         ],
     };
 
-    changeTaskStatus = (id) => {
+    changeRemoveTask = (id, act) => {
         const stateCopy = JSON.parse(JSON.stringify(this.state.tasks));
         const index = stateCopy.findIndex((task) => task.id === id);
 
-        const currentTask = {
-            ...stateCopy[index],
-            isDone: !stateCopy[index].isDone,
-        };
-        const resultArr = [
-            ...stateCopy.slice(0, index),
-            currentTask,
-            ...stateCopy.slice(index + 1),
-        ];
+        let resultArr;
+
+        if (act === 'change') {
+            const currentTask = {
+                ...stateCopy[index],
+                isDone: !stateCopy[index].isDone,
+            };
+            resultArr = [
+                ...stateCopy.slice(0, index),
+                currentTask,
+                ...stateCopy.slice(index + 1),
+            ];
+        } else if (act === 'remove') {
+            resultArr = [
+                ...stateCopy.slice(0, index),
+                ...stateCopy.slice(index + 1),
+            ];
+        }
 
         this.setState({
             tasks: resultArr,
@@ -61,7 +70,7 @@ class App extends Component {
                 <section className='main'>
                     <TaskList
                         tasks={tasks}
-                        changeDone={this.changeTaskStatus}
+                        changeRemoveTask={this.changeRemoveTask}
                     />
                 </section>
                 <Footer />

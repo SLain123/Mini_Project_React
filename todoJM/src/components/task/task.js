@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Task = ({id, lable, timeToCreate, isDone, changeDone }) => {
+const Task = ({ id, lable, timeToCreate, isDone, changeRemoveTask }) => {
     return (
         <div className='view'>
             <input
                 className='toggle'
-                onClick={() => changeDone(id)}
+                onClick={() => changeRemoveTask(id, 'change')}
                 type='checkbox'
                 defaultChecked={isDone}
             />
@@ -14,7 +14,10 @@ const Task = ({id, lable, timeToCreate, isDone, changeDone }) => {
                 <span className='created'>{`created ${timeToCreate}`}</span>
             </label>
             <button className='icon icon-edit'></button>
-            <button className='icon icon-destroy'></button>
+            <button
+                className='icon icon-destroy'
+                onClick={() => changeRemoveTask(id, 'remove')}
+            ></button>
         </div>
     );
 };
