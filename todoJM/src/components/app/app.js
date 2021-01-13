@@ -9,8 +9,8 @@ class App extends Component {
         tasks: [
             {
                 id: 1,
-                lable: 'Completed task',
-                timeToCreate: formatDistanceToNow(new Date(2020, 6, 2), {
+                lable: 'Go shoping',
+                timeToCreate: formatDistanceToNow(new Date(2021, 0, 12), {
                     includeSeconds: true,
                     addSuffix: true,
                 }),
@@ -18,8 +18,8 @@ class App extends Component {
             },
             {
                 id: 2,
-                lable: 'Editing task',
-                timeToCreate: formatDistanceToNow(new Date(), {
+                lable: 'Make application',
+                timeToCreate: formatDistanceToNow(new Date(2021, 0, 11), {
                     includeSeconds: true,
                     addSuffix: true,
                 }),
@@ -27,11 +27,30 @@ class App extends Component {
             },
             {
                 id: 3,
-                lable: 'Active task',
-                timeToCreate: formatDistanceToNow(new Date()),
+                lable: 'Check tests',
+                timeToCreate: formatDistanceToNow(new Date(2020, 11, 10)),
                 isDone: false,
             },
         ],
+    };
+
+    changeTaskStatus = (id) => {
+        const stateCopy = JSON.parse(JSON.stringify(this.state.tasks));
+        const index = stateCopy.findIndex((task) => task.id === id);
+
+        const currentTask = {
+            ...stateCopy[index],
+            isDone: !stateCopy[index].isDone,
+        };
+        const resultArr = [
+            ...stateCopy.slice(0, index),
+            currentTask,
+            ...stateCopy.slice(index + 1),
+        ];
+
+        this.setState({
+            tasks: resultArr,
+        });
     };
 
     render() {
@@ -40,7 +59,10 @@ class App extends Component {
             <section className='todoapp'>
                 <Header />
                 <section className='main'>
-                    <TaskList tasks={tasks} />
+                    <TaskList
+                        tasks={tasks}
+                        changeDone={this.changeTaskStatus}
+                    />
                 </section>
                 <Footer />
             </section>

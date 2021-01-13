@@ -1,9 +1,14 @@
 import React from 'react';
 
-const Task = ({lable, timeToCreate}) => {
+const Task = ({id, lable, timeToCreate, isDone, changeDone }) => {
     return (
         <div className='view'>
-            <input className='toggle' type='checkbox' />
+            <input
+                className='toggle'
+                onClick={() => changeDone(id)}
+                type='checkbox'
+                defaultChecked={isDone}
+            />
             <label>
                 <span className='description'>{lable}</span>
                 <span className='created'>{`created ${timeToCreate}`}</span>
