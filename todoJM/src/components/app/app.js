@@ -5,6 +5,8 @@ import Footer from '../footer';
 import { formatDistanceToNow } from 'date-fns';
 
 class App extends Component {
+    genId = 10;
+
     state = {
         tasks: [
             {
@@ -32,28 +34,31 @@ class App extends Component {
                 isDone: false,
             },
         ],
+        filtedTasks: [],
+        currentFilter: 'all',
+        activeTask: 0,
     };
 
     changeRemoveTask = (id, act) => {
-        const stateCopy = JSON.parse(JSON.stringify(this.state.tasks));
-        const index = stateCopy.findIndex((task) => task.id === id);
+        const tasksCopy = JSON.parse(JSON.stringify(this.state.tasks));
+        const index = tasksCopy.findIndex((task) => task.id === id);
 
         let resultArr;
 
         if (act === 'change') {
             const currentTask = {
-                ...stateCopy[index],
-                isDone: !stateCopy[index].isDone,
+                ...tasksCopy[index],
+                isDone: !tasksCopy[index].isDone,
             };
             resultArr = [
-                ...stateCopy.slice(0, index),
+                ...tasksCopy.slice(0, index),
                 currentTask,
-                ...stateCopy.slice(index + 1),
+                ...tasksCopy.slice(index + 1),
             ];
         } else if (act === 'remove') {
             resultArr = [
-                ...stateCopy.slice(0, index),
-                ...stateCopy.slice(index + 1),
+                ...tasksCopy.slice(0, index),
+                ...tasksCopy.slice(index + 1),
             ];
         }
 
@@ -62,18 +67,97 @@ class App extends Component {
         });
     };
 
+    addTask = (lable) => {
+        if (lable) {
+            const newTask = {
+                id: this.genId++,
+                lable,
+                timeToCreate: formatDistanceToNow(new Date()),
+                isDone: false,
+            };
+
+            this.setState(({ tasks }) => {
+                const resultArr = [...tasks, newTask];
+
+                return {
+                    tasks: resultArr,
+                };
+            });
+        }
+    };
+
+    setFilter = (filter) => {
+        this.setState(({ tasks }) => {
+            if (filter === 'all') {
+                return {
+                    filtedTasks: tasks,
+                    currentFilter: filter,
+                };
+            }
+
+            const resultArr = tasks.filter((task) => {
+                return task.isDone === filter ? task : null;
+            });
+
+            return {
+                filtedTasks: resultArr,
+                currentFilter: filter,
+            };
+        });
+    };
+
+    clearComplited = () => {
+        const tasksCopy = JSON.parse(JSON.stringify(this.state.tasks));
+        const resultArr = tasksCopy.filter((task) => {
+            return !task.isDone ? task : null;
+        });
+
+        this.setState({
+            tasks: resultArr,
+        });
+    };
+
+    getActiveTask = () => {
+        let result = 0;
+
+        this.state.tasks.forEach((task) => {
+            return !task.isDone ? result++ : null;
+        });
+
+        this.setState({
+            activeTask: result,
+        });
+    };
+
+    componentDidMount = () => {
+        this.setFilter(this.state.currentFilter);
+        this.getActiveTask();
+    };
+
+    componentDidUpdate = (prevProps, prevState) => {
+        if (this.state.tasks !== prevState.tasks) {
+            this.setFilter(this.state.currentFilter);
+            this.getActiveTask();
+        }
+    };
+
     render() {
-        const tasks = this.state.tasks;
+        const { filtedTasks, currentFilter, activeTask } = this.state;
         return (
             <section className='todoapp'>
-                <Header />
+                <Header addTask={this.addTask} />
                 <section className='main'>
                     <TaskList
-                        tasks={tasks}
+                        tasks={filtedTasks}
                         changeRemoveTask={this.changeRemoveTask}
                     />
                 </section>
-                <Footer />
+                <Footer
+                    setFilter={this.setFilter}
+                    currentFilter={currentFilter}
+                    clearComplited={this.clearComplited}
+                    activeTask={activeTask}
+                />
             </section>
         );
     }
