@@ -2,82 +2,78 @@ import React, { Component } from 'react';
 import Header from '../header';
 import TaskList from '../taskList';
 import Footer from '../footer';
-import { formatDistanceToNow } from 'date-fns';
 
 class App extends Component {
-    genId = 10;
+    genId = 1;
 
     state = {
         tasks: [
-            {
-                id: 1,
-                lable: 'Go shoping',
-                timeToCreate: formatDistanceToNow(new Date(2021, 0, 12), {
-                    includeSeconds: true,
-                    addSuffix: true,
-                }),
-                isDone: true,
-            },
-            {
-                id: 2,
-                lable: 'Make application',
-                timeToCreate: formatDistanceToNow(new Date(2021, 0, 11), {
-                    includeSeconds: true,
-                    addSuffix: true,
-                }),
-                isDone: false,
-            },
-            {
-                id: 3,
-                lable: 'Check tests',
-                timeToCreate: formatDistanceToNow(new Date(2020, 11, 10)),
-                isDone: false,
-            },
+            this.createTaskPattern('Go shoping', true, new Date(2021, 0, 12)),
+            this.createTaskPattern('Make app', false, new Date(2020, 11, 11)),
+            this.createTaskPattern('Check tests', false, new Date(2020, 5, 1)),
         ],
-        filtedTasks: [],
-        currentFilter: 'all',
-        activeTask: 0,
+        filter: 'all',
     };
 
-    changeRemoveTask = (id, act) => {
-        const tasksCopy = JSON.parse(JSON.stringify(this.state.tasks));
-        const index = tasksCopy.findIndex((task) => task.id === id);
+    createTaskPattern(lable, isDone = false, timeToCreate = new Date()) {
+        return {
+            id: this.genId++,
+            lable,
+            timeToCreate,
+            isDone,
+            isEdit: false,
+        };
+    }
 
-        let resultArr;
+    changeRemoveTask = (id, act, prop) => {
+        this.setState(({ tasks }) => {
+            const index = tasks.findIndex((task) => task.id === id);
+            let resultArr;
 
-        if (act === 'change') {
-            const currentTask = {
-                ...tasksCopy[index],
-                isDone: !tasksCopy[index].isDone,
-            };
-            resultArr = [
-                ...tasksCopy.slice(0, index),
-                currentTask,
-                ...tasksCopy.slice(index + 1),
-            ];
-        } else if (act === 'remove') {
-            resultArr = [
-                ...tasksCopy.slice(0, index),
-                ...tasksCopy.slice(index + 1),
-            ];
-        }
+            if (act === 'change') {
+                const currentTask = {
+                    ...tasks[index],
+                    [prop]: !tasks[index][prop],
+                };
+                resultArr = [
+                    ...tasks.slice(0, index),
+                    currentTask,
+                    ...tasks.slice(index + 1),
+                ];
+            } else if (act === 'remove') {
+                resultArr = [
+                    ...tasks.slice(0, index),
+                    ...tasks.slice(index + 1),
+                ];
+            }
 
-        this.setState({
-            tasks: resultArr,
+            return { tasks: resultArr };
         });
     };
 
-    addTask = (lable) => {
-        if (lable) {
-            const newTask = {
-                id: this.genId++,
-                lable,
-                timeToCreate: formatDistanceToNow(new Date()),
-                isDone: false,
-            };
-
+    addEditTask = (newLable, id) => {
+        if (newLable && !id) {
             this.setState(({ tasks }) => {
-                const resultArr = [...tasks, newTask];
+                const resultArr = [...tasks, this.createTaskPattern(newLable)];
+
+                return {
+                    tasks: resultArr,
+                };
+            });
+        } else if (newLable && id) {
+            this.setState(({ tasks }) => {
+                const index = tasks.findIndex((task) => task.id === id);
+
+                const currentTask = {
+                    ...tasks[index],
+                    lable: newLable,
+                    isEdit: false,
+                };
+                const resultArr = [
+                    ...tasks.slice(0, index),
+                    currentTask,
+                    ...tasks.slice(index + 1),
+                ];
 
                 return {
                     tasks: resultArr,
@@ -87,76 +83,44 @@ class App extends Component {
     };
 
     setFilter = (filter) => {
-        this.setState(({ tasks }) => {
-            if (filter === 'all') {
-                return {
-                    filtedTasks: tasks,
-                    currentFilter: filter,
-                };
-            }
-
-            const resultArr = tasks.filter((task) => {
-                return task.isDone === filter ? task : null;
-            });
-
-            return {
-                filtedTasks: resultArr,
-                currentFilter: filter,
-            };
+        this.setState({
+            filter,
         });
     };
 
     clearComplited = () => {
-        const tasksCopy = JSON.parse(JSON.stringify(this.state.tasks));
-        const resultArr = tasksCopy.filter((task) => {
-            return !task.isDone ? task : null;
-        });
+        this.setState(({ tasks }) => {
+            const resultArr = tasks.filter((task) =>
+                !task.isDone ? task : null,
+            );
 
-        this.setState({
-            tasks: resultArr,
-        });
-    };
-
-    getActiveTask = () => {
-        let result = 0;
-
-        this.state.tasks.forEach((task) => {
-            return !task.isDone ? result++ : null;
-        });
-
-        this.setState({
-            activeTask: result,
+            return { tasks: resultArr };
         });
     };
 
-    componentDidMount = () => {
-        this.setFilter(this.state.currentFilter);
-        this.getActiveTask();
-    };
-
-    componentDidUpdate = (prevProps, prevState) => {
-        if (this.state.tasks !== prevState.tasks) {
-            this.setFilter(this.state.currentFilter);
-            this.getActiveTask();
-        }
+    getActiveTasksLength = () => {
+        return this.state.tasks.filter((task) => !task.isDone).length;
     };
 
     render() {
-        const { filtedTasks, currentFilter, activeTask } = this.state;
+        const { tasks, filter } = this.state;
+
         return (
             <section className='todoapp'>
-                <Header addTask={this.addTask} />
+                <Header addEditTask={this.addEditTask} />
                 <section className='main'>
                     <TaskList
-                        tasks={filtedTasks}
+                        tasks={tasks}
+                        filter={filter}
                         changeRemoveTask={this.changeRemoveTask}
+                        addEditTask={this.addEditTask}
                     />
                 </section>
                 <Footer
                     setFilter={this.setFilter}
-                    currentFilter={currentFilter}
+                    filter={filter}
                     clearComplited={this.clearComplited}
-                    activeTask={activeTask}
+                    getActiveTasksLength={this.getActiveTasksLength}
                 />
             </section>
         );

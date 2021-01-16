@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class NewTaskForm extends Component {
     state = {
         input: '',
+    };
+
+    static propTypes = {
+        addEditTask: PropTypes.func.isRequired,
     };
 
     onChangeInput = (text) => {
@@ -13,7 +18,7 @@ class NewTaskForm extends Component {
 
     render() {
         const { input } = this.state;
-        const { addTask } = this.props;
+        const { addEditTask } = this.props;
 
         return (
             <input
@@ -26,7 +31,7 @@ class NewTaskForm extends Component {
                 }}
                 onKeyDown={(e) => {
                     if (e.key === 'Enter') {
-                        addTask(input);
+                        addEditTask(input);
                         this.onChangeInput('');
                     }
                 }}
