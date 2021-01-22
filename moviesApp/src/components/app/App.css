@@ -1,5 +1,11 @@
-.App {
-    background-color: #FFFFFF;
+.app {
+    background-color: #ffffff;
     max-width: 1010px;
     margin: 15px auto;
+}
+
+@media (max-width: 1024px) {
+    .app {
+        max-width: 100%;
+    }
 }

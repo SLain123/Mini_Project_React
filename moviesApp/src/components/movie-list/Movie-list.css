@@ -1,5 +1,17 @@
 .movie-list {
-  margin: 32px;
-  padding: 8px;
   background-color: #FFFFFF;
+  width: 100%;
+  padding-left: 18px;
+}
+
+@media (max-width: 1024px) {
+  .movie-list {
+    padding-left: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .movie-list {
+    padding-left: 10px;
+  }
 }

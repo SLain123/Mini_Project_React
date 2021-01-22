@@ -2,6 +2,7 @@ body {
     margin: 0;
     background-color: #e5e5e5 !important;
     font-family: 'Inter' !important;
+    box-sizing: border-box;
 }
 
 @font-face {
