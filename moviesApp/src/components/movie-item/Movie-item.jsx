@@ -37,12 +37,16 @@ const MovieItem = (props) => {
 };
 
 MovieItem.propTypes = {
-  backdrop_path: PropTypes.string.isRequired,
+  backdrop_path: PropTypes.string,
   title: PropTypes.string.isRequired,
   genre_ids: PropTypes.arrayOf(PropTypes.number).isRequired,
   overview: PropTypes.string.isRequired,
   release_date: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
+};
+
+MovieItem.defaultProps = {
+  backdrop_path: image,
 };
 
 export default MovieItem;
