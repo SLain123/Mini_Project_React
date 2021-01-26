@@ -13,19 +13,21 @@ class App extends Component {
   };
 
   componentDidMount() {
-    MovieService.getMoviesByTitle("return")
-      .then(({ results }) => {
-        this.setState({
-          movieListArr: results,
-          onLoad: false,
+    setTimeout(() => {
+      MovieService.getMoviesByTitle("return")
+        .then(({ results }) => {
+          this.setState({
+            movieListArr: results,
+            onLoad: false,
+          });
+        })
+        .catch((error) => {
+          this.setState({
+            onFail: error,
+            onLoad: false,
+          });
         });
-      })
-      .catch((error) => {
-        this.setState({
-          onFail: error,
-          onLoad: false,
-        });
-      });
+    }, 1000);
   }
 
   render() {
