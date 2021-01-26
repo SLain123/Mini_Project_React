@@ -3,6 +3,9 @@
     max-width: 1010px;
     margin: 10px auto;
     min-height: 95vh;
+    overflow: hidden;
+    display: flex;
+    flex-flow: column;
 }
 
 .ant-spin {
