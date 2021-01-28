@@ -39,6 +39,7 @@
     overflow: hidden;
     color: black;
     max-width: 55%;
+    min-width: 245px;
 }
 
 @media (max-width: 1024px) {

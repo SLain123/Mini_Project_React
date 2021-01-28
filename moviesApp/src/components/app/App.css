@@ -8,43 +8,8 @@
     flex-flow: column;
 }
 
-.ant-spin {
-    width: 100%;
-    margin-top: 40vh;
-}
-
-.ant-alert {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 5px;
-}
-
-.anticon {
-    text-align: center;
-}
-
-.ant-alert-content {
-    font-size: 20px;
-}
-
-.ant-alert-message {
-    color: red;
-}
-
 @media (max-width: 1024px) {
     .app {
         max-width: 100%;
-    }
-}
-
-@media (max-width: 420px) {
-    .ant-alert {
-        padding: 10px 0;
-    }
-
-    .ant-alert svg {
-        display: none;
     }
 }

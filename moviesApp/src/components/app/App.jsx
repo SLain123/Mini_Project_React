@@ -1,40 +1,8 @@
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/prop-types */
-/* eslint-disable react/no-unused-state */
 import React, { Component } from "react";
-import { Spin, Alert } from "antd";
 import * as _ from "lodash";
 import Search from "../search";
 import MovieService from "../../services/movies-service";
 import MovieList from "../movie-list";
-
-const MainContent = ({
-  movieListArr,
-  searchWord,
-  changeSearchWord,
-  onLoad,
-  onFail,
-}) => {
-  if (onLoad) {
-    return <Spin tip="Loading..." size="large" />;
-  }
-  if (!onLoad && onFail) {
-    return (
-      <Alert
-        type="error"
-        message={`Error: Can't download data! ${onFail}`}
-        description="An error occurred while downloading data from a remote server"
-        banner
-      />
-    );
-  }
-  return (
-    <>
-      <Search searchWord={searchWord} changeSearchWord={changeSearchWord} />
-      <MovieList movieListArr={movieListArr} />
-    </>
-  );
-};
 
 class App extends Component {
   state = {
@@ -42,13 +10,17 @@ class App extends Component {
     onLoad: true,
     onFail: false,
     searchWord: "",
+    page: 1,
+    totalResults: null,
   };
 
-  updateMovieList = _.debounce((searchWord) => {
-    MovieService.getMoviesByTitle(searchWord)
-      .then(({ results }) => {
+  updateMovieList = _.debounce((searchWord, searchPage) => {
+    MovieService.getMoviesByTitle(searchWord, searchPage)
+      .then(({ results, total_results: totalResults, page }) => {
         this.setState({
           movieListArr: results,
+          totalResults,
+          page,
           onLoad: false,
         });
       })
@@ -61,33 +33,63 @@ class App extends Component {
   }, 500);
 
   componentDidMount() {
-    this.updateMovieList("return");
+    this.updateMovieList("return", 1);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { searchWord } = this.state;
-    if (prevState.searchWord !== searchWord && searchWord) {
-      this.updateMovieList(searchWord);
+    const { searchWord, page } = this.state;
+
+    if (
+      (prevState.searchWord !== searchWord && searchWord) ||
+      prevState.page !== page
+    ) {
+      this.updateMovieList(searchWord, page);
     }
   }
 
   changeSearchWord = (searchWord) => {
+    if (searchWord !== "") {
+      this.setState({
+        onLoad: true,
+      });
+    }
+
     this.setState({
       searchWord,
+      page: 1,
+    });
+  };
+
+  changePage = (page) => {
+    this.setState({
+      page,
+      onLoad: true,
     });
   };
 
   render() {
-    const { movieListArr, onLoad, onFail, searchWord } = this.state;
+    const {
+      movieListArr,
+      onLoad,
+      onFail,
+      searchWord,
+      page,
+      totalResults,
+    } = this.state;
 
     return (
       <div className="app">
-        <MainContent
-          movieListArr={movieListArr}
+        <Search
           searchWord={searchWord}
           changeSearchWord={this.changeSearchWord}
+        />
+        <MovieList
+          movieListArr={movieListArr}
           onLoad={onLoad}
           onFail={onFail}
+          page={page}
+          totalResults={totalResults}
+          changePage={this.changePage}
         />
       </div>
     );

@@ -5,6 +5,67 @@ body {
     box-sizing: border-box;
 }
 
+/* antd style ================================================================ */
+
+.ant-spin {
+    width: 100%;
+    display: flex !important;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.ant-spin-text {
+    margin-top: 15px;
+}
+
+.ant-alert {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+}
+
+.anticon {
+    text-align: center;
+}
+
+.ant-alert-content {
+    font-size: 20px;
+}
+
+.ant-alert-message {
+    color: red;
+}
+
+.ant-pagination {
+    margin-top: 25px !important;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.ant-pagination-item-active a {
+    background-color: #1890ff;
+    color: #ffffff !important;
+    border-radius: 3px;
+}
+
+.ant-pagination-item {
+    border: none !important;
+}
+
+@media (max-width: 420px) {
+    .ant-alert {
+        padding: 10px 0;
+    }
+
+    .ant-alert svg {
+        display: none;
+    }
+}
+
 @font-face {
     font-family: 'Inter';
     src: url('./assets/fonts/Inter-Regular.woff2') format('woff2');

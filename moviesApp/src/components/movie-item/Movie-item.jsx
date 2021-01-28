@@ -6,6 +6,13 @@ import Gender from "../gender";
 import cutsOverview from "../../utils/cutsOverview";
 import image from "./ex.jpg";
 
+const getRightDataFormat = (date) => {
+  if (date === "") {
+    return "Release date unknown";
+  }
+  return format(new Date(date), "LLLL d, yyyy");
+};
+
 const MovieItem = (props) => {
   const {
     backdrop_path: imgPath,
@@ -26,9 +33,7 @@ const MovieItem = (props) => {
       />
       <div className="movie-item__info">
         <h2 className="movie-item__title">{cutsOverview(title, 40)}</h2>
-        <p className="movie-item__data">
-          {format(new Date(date), "LLLL d, yyyy")}
-        </p>
+        <p className="movie-item__data">{getRightDataFormat(date)}</p>
         <Gender genderArr={genderArr} id={id} />
       </div>
       <p className="movie-item__overview">{cutsOverview(overview, 165)}</p>
@@ -41,12 +46,13 @@ MovieItem.propTypes = {
   title: PropTypes.string.isRequired,
   genre_ids: PropTypes.arrayOf(PropTypes.number).isRequired,
   overview: PropTypes.string.isRequired,
-  release_date: PropTypes.string.isRequired,
+  release_date: PropTypes.string,
   id: PropTypes.number.isRequired,
 };
 
 MovieItem.defaultProps = {
   backdrop_path: image,
+  release_date: "",
 };
 
 export default MovieItem;
