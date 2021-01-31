@@ -1,5 +1,7 @@
+/* eslint-disable react/no-unused-state */
 import React, { Component } from "react";
 import * as _ from "lodash";
+import Tabs from "../tabs";
 import Search from "../search";
 import MovieService from "../../services/movies-service";
 import MovieList from "../movie-list";
@@ -12,6 +14,7 @@ class App extends Component {
     searchWord: "",
     page: 1,
     totalResults: null,
+    workMode: "search",
   };
 
   updateMovieList = _.debounce((searchWord, searchPage) => {
@@ -67,6 +70,12 @@ class App extends Component {
     });
   };
 
+  changeWorkMode = (workMode) => {
+    this.setState({
+      workMode,
+    });
+  };
+
   render() {
     const {
       movieListArr,
@@ -75,10 +84,12 @@ class App extends Component {
       searchWord,
       page,
       totalResults,
+      workMode,
     } = this.state;
 
     return (
       <div className="app">
+        <Tabs changeWorkMode={this.changeWorkMode} workMode={workMode} />
         <Search
           searchWord={searchWord}
           changeSearchWord={this.changeSearchWord}

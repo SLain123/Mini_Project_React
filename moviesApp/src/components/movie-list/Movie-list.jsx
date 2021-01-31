@@ -75,12 +75,13 @@ MovieList.propTypes = {
   onLoad: PropTypes.bool.isRequired,
   onFail: PropTypes.bool.isRequired,
   page: PropTypes.number,
-  totalResults: PropTypes.number.isRequired,
+  totalResults: PropTypes.number,
   changePage: PropTypes.func.isRequired,
 };
 
 MovieList.defaultProps = {
   page: 1,
+  totalResults: 1,
 };
 
 export default MovieList;
