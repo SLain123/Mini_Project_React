@@ -40,6 +40,11 @@
     color: black;
     max-width: 55%;
     min-width: 245px;
+    margin-bottom: 0;
+}
+
+.movie-item__rate li {
+    margin-right: 4px !important;
 }
 
 @media (max-width: 1024px) {
@@ -67,6 +72,14 @@
         margin: 0 10px;
         max-width: none;
         max-height: 92px;
+    }
+
+    .movie-item__rate {
+        margin-left: auto;
+    }
+
+    .movie-item__rate li {
+        margin-right: 7px !important;
     }
 }
 

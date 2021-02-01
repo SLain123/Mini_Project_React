@@ -2,6 +2,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { format } from "date-fns";
+import { Rate } from "antd";
+import { ContextConsumer } from "../../services/ContextProvider";
+import MovieService from "../../services/movies-service";
 import Gender from "../gender";
 import cutsOverview from "../../utils/cutsOverview";
 import image from "./ex.jpg";
@@ -24,20 +27,36 @@ const MovieItem = (props) => {
   } = props;
 
   return (
-    <div className="movie-item">
-      <img
-        src={image}
-        alt="movie logo"
-        className="movie-item__img"
-        path={imgPath}
-      />
-      <div className="movie-item__info">
-        <h2 className="movie-item__title">{cutsOverview(title, 40)}</h2>
-        <p className="movie-item__data">{getRightDataFormat(date)}</p>
-        <Gender genderArr={genderArr} id={id} />
-      </div>
-      <p className="movie-item__overview">{cutsOverview(overview, 165)}</p>
-    </div>
+    <ContextConsumer>
+      {(movieRateList, getGuestRateList, cleanGuestRateList) => (
+        <div className="movie-item">
+          <img
+            src={image}
+            alt="movie logo"
+            className="movie-item__img"
+            path={imgPath}
+          />
+          <div className="movie-item__info">
+            <h2 className="movie-item__title">{cutsOverview(title, 40)}</h2>
+            <p className="movie-item__data">{getRightDataFormat(date)}</p>
+            <Gender genderArr={genderArr} id={id} />
+          </div>
+          <p className="movie-item__overview">{cutsOverview(overview, 165)}</p>
+          <Rate
+            allowClear={false}
+            allowHalf
+            defaultValue={0}
+            className="movie-item__rate"
+            count={10}
+            onChange={(num) => {
+              MovieService.setRate(num, id);
+              cleanGuestRateList();
+              getGuestRateList(1);
+            }}
+          />
+        </div>
+      )}
+    </ContextConsumer>
   );
 };
 

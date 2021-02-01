@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unused-state */
 import React, { Component } from "react";
 import * as _ from "lodash";
@@ -5,6 +6,7 @@ import Tabs from "../tabs";
 import Search from "../search";
 import MovieService from "../../services/movies-service";
 import MovieList from "../movie-list";
+import { ContextProvider } from "../../services/ContextProvider";
 
 class App extends Component {
   state = {
@@ -37,6 +39,7 @@ class App extends Component {
 
   componentDidMount() {
     this.updateMovieList("return", 1);
+    // this.getGuestRateList(1);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -88,21 +91,23 @@ class App extends Component {
     } = this.state;
 
     return (
-      <div className="app">
-        <Tabs changeWorkMode={this.changeWorkMode} workMode={workMode} />
-        <Search
-          searchWord={searchWord}
-          changeSearchWord={this.changeSearchWord}
-        />
-        <MovieList
-          movieListArr={movieListArr}
-          onLoad={onLoad}
-          onFail={onFail}
-          page={page}
-          totalResults={totalResults}
-          changePage={this.changePage}
-        />
-      </div>
+      <ContextProvider>
+        <div className="app">
+          <Tabs changeWorkMode={this.changeWorkMode} workMode={workMode} />
+          <Search
+            searchWord={searchWord}
+            changeSearchWord={this.changeSearchWord}
+          />
+          <MovieList
+            movieListArr={movieListArr}
+            onLoad={onLoad}
+            onFail={onFail}
+            page={page}
+            totalResults={totalResults}
+            changePage={this.changePage}
+          />
+        </div>
+      </ContextProvider>
     );
   }
 }
