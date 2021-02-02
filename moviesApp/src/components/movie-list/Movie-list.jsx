@@ -3,18 +3,11 @@ import PropTypes from "prop-types";
 import { Row, Col, Spin, Alert, Pagination } from "antd";
 import MovieItem from "../movie-item";
 
-const MainContent = ({
-  movieListArr,
-  onLoad,
-  onFail,
-  page,
-  totalResults,
-  changePage,
-}) => {
-  if (onLoad) {
+const statusChecker = (onloading, onFail) => {
+  if (onloading) {
     return <Spin tip="Loading..." size="large" />;
   }
-  if (!onLoad && onFail) {
+  if (!onloading && onFail) {
     return (
       <Alert
         type="error"
@@ -24,14 +17,17 @@ const MainContent = ({
       />
     );
   }
+  return false;
+};
 
-  const movieListItems = movieListArr.map((movie) => (
+const MainContent = ({ movieSearchList, page, totalResults, changePage }) => {
+  const movieListItems = movieSearchList.map((movie) => (
     <Col span={24} md={12} className="gutter-row" key={movie.id}>
       <MovieItem {...movie} />
     </Col>
   ));
   const searchResult =
-    movieListArr.length > 0 ? (
+    movieSearchList.length > 0 ? (
       <>
         {movieListItems}
         <Pagination
@@ -51,28 +47,35 @@ const MainContent = ({
 };
 
 const MovieList = ({
-  movieListArr,
-  onLoad,
+  movieSearchList,
+  onloading,
   onFail,
   page,
   totalResults,
   changePage,
-}) => (
-  <Row className="movie-list" gutter={[{ xs: 16, sm: 16, md: 36 }, 35]}>
-    <MainContent
-      movieListArr={movieListArr}
-      onLoad={onLoad}
-      onFail={onFail}
-      page={page}
-      totalResults={totalResults}
-      changePage={changePage}
-    />
-  </Row>
-);
+}) => {
+  const checkStatus = statusChecker(onloading, onFail);
+  if (checkStatus) {
+    return checkStatus;
+  }
+
+  return (
+    <Row className="movie-list" gutter={[{ xs: 16, sm: 16, md: 36 }, 35]}>
+      <MainContent
+        movieSearchList={movieSearchList}
+        onloading={onloading}
+        onFail={onFail}
+        page={page}
+        totalResults={totalResults}
+        changePage={changePage}
+      />
+    </Row>
+  );
+};
 
 MovieList.propTypes = {
-  movieListArr: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onLoad: PropTypes.bool.isRequired,
+  movieSearchList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onloading: PropTypes.bool.isRequired,
   onFail: PropTypes.bool.isRequired,
   page: PropTypes.number,
   totalResults: PropTypes.number,

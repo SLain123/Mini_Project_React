@@ -16,6 +16,18 @@ const getRightDataFormat = (date) => {
   return format(new Date(date), "LLLL d, yyyy");
 };
 
+const getRateStatus = (currentId, movieRateList) => {
+  let resultRate = 0;
+
+  movieRateList.forEach(({ id, rating }) => {
+    if (id === currentId) {
+      resultRate = rating;
+    }
+  });
+
+  return resultRate;
+};
+
 const MovieItem = (props) => {
   const {
     backdrop_path: imgPath,
@@ -28,7 +40,7 @@ const MovieItem = (props) => {
 
   return (
     <ContextConsumer>
-      {(movieRateList, getGuestRateList, cleanGuestRateList) => (
+      {({ movieRateList, getGuestRateList, cleanGuestRateList, workMode }) => (
         <div className="movie-item">
           <img
             src={image}
@@ -45,7 +57,7 @@ const MovieItem = (props) => {
           <Rate
             allowClear={false}
             allowHalf
-            defaultValue={0}
+            defaultValue={getRateStatus(id, movieRateList)}
             className="movie-item__rate"
             count={10}
             onChange={(num) => {

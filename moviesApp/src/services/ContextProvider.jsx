@@ -7,29 +7,35 @@ const { Provider, Consumer } = React.createContext();
 class ContextProvider extends Component {
   state = {
     movieRateList: [],
+    workMode: "search",
   };
 
-  getGuestRateList = (page) => {
-    const token = localStorage.getItem("token");
-    MovieService.getGuestRateList(token, page).then(({ results }) => {
-      if (results.length === 20) {
-        this.setState(({ movieRateList }) => {
-          const newList = [...movieRateList, ...results];
-          return {
-            movieRateList: newList,
-          };
-        });
+  componentDidMount() {
+    this.getGuestRateList(1);
+  }
 
-        this.getGuestRateList(page + 1);
-      }
-
+  getGuestRateList = (needPage) => {
+    const addRateToState = (resultsArr) => {
       this.setState(({ movieRateList }) => {
-        const newList = [...movieRateList, ...results];
+        const newList = [...movieRateList, ...resultsArr];
         return {
           movieRateList: newList,
         };
       });
-    });
+    };
+
+    const token = localStorage.getItem("token");
+
+    MovieService.getGuestRateList(token, needPage).then(
+      ({ results, total_pages: totalPage, page }) => {
+        if (results.length === 20) {
+          if (page !== totalPage) {
+            this.getGuestRateList(needPage + 1);
+          }
+        }
+        addRateToState(results);
+      }
+    );
   };
 
   cleanGuestRateList = () => {
@@ -38,15 +44,24 @@ class ContextProvider extends Component {
     });
   };
 
+  changeWorkMode = (workMode) => {
+    this.setState({
+      workMode,
+    });
+  };
+
   render() {
-    const { movieRateList } = this.state;
+    const { movieRateList, workMode } = this.state;
     const { children } = this.props;
+
     return (
       <Provider
         value={{
           movieRateList,
           getGuestRateList: this.getGuestRateList,
           cleanGuestRateList: this.cleanGuestRateList,
+          changeWorkMode: this.changeWorkMode,
+          workMode,
         }}
       >
         {children}

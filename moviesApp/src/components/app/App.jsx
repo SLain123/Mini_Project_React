@@ -10,36 +10,34 @@ import { ContextProvider } from "../../services/ContextProvider";
 
 class App extends Component {
   state = {
-    movieListArr: [],
-    onLoad: true,
+    movieSearchList: [],
+    onloading: true,
     onFail: false,
     searchWord: "",
     page: 1,
     totalResults: null,
-    workMode: "search",
   };
 
   updateMovieList = _.debounce((searchWord, searchPage) => {
     MovieService.getMoviesByTitle(searchWord, searchPage)
       .then(({ results, total_results: totalResults, page }) => {
         this.setState({
-          movieListArr: results,
+          movieSearchList: results,
           totalResults,
           page,
-          onLoad: false,
+          onloading: false,
         });
       })
       .catch((error) => {
         this.setState({
           onFail: error,
-          onLoad: false,
+          onloading: false,
         });
       });
   }, 500);
 
   componentDidMount() {
     this.updateMovieList("return", 1);
-    // this.getGuestRateList(1);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -56,7 +54,7 @@ class App extends Component {
   changeSearchWord = (searchWord) => {
     if (searchWord !== "") {
       this.setState({
-        onLoad: true,
+        onloading: true,
       });
     }
 
@@ -69,20 +67,14 @@ class App extends Component {
   changePage = (page) => {
     this.setState({
       page,
-      onLoad: true,
-    });
-  };
-
-  changeWorkMode = (workMode) => {
-    this.setState({
-      workMode,
+      onloading: true,
     });
   };
 
   render() {
     const {
-      movieListArr,
-      onLoad,
+      movieSearchList,
+      onloading,
       onFail,
       searchWord,
       page,
@@ -93,18 +85,19 @@ class App extends Component {
     return (
       <ContextProvider>
         <div className="app">
-          <Tabs changeWorkMode={this.changeWorkMode} workMode={workMode} />
+          <Tabs />
           <Search
             searchWord={searchWord}
             changeSearchWord={this.changeSearchWord}
           />
           <MovieList
-            movieListArr={movieListArr}
-            onLoad={onLoad}
+            movieSearchList={movieSearchList}
+            onloading={onloading}
             onFail={onFail}
             page={page}
             totalResults={totalResults}
             changePage={this.changePage}
+            workMode={workMode}
           />
         </div>
       </ContextProvider>

@@ -1,5 +1,6 @@
 .gender {
     display: flex;
+    min-height: 27px;
 }
 
 .gender__text {

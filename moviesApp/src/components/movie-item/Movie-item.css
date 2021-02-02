@@ -41,6 +41,11 @@
     max-width: 55%;
     min-width: 245px;
     margin-bottom: 0;
+    height: 110px;
+}
+
+.movie-item__rate {
+    margin-top: auto;
 }
 
 .movie-item__rate li {

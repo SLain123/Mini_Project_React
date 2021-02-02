@@ -2,10 +2,10 @@
 import Request from "./request-service";
 
 class MovieService {
-  static getMoviesByTitle = (title = "return", page = 1) => {
+  static getMoviesByTitle = (title = "return", needPage = 1) => {
     const correctTitle = title === "" ? "return" : title;
     return Request.sendRequest(
-      `https://api.themoviedb.org/3/search/movie?api_key=174f3d1cd84f12ef2ac5c402cc19a666&query=${correctTitle}&page=${page}`
+      `https://api.themoviedb.org/3/search/movie?api_key=174f3d1cd84f12ef2ac5c402cc19a666&query=${correctTitle}&page=${needPage}`
     );
   };
 
@@ -16,15 +16,16 @@ class MovieService {
       localStorage.setItem("token", token)
     );
 
-  static getGuestRateList = (token, page) => {
+  static getGuestRateList = (token, needPage) => {
     return Request.sendRequest(
-      `https://api.themoviedb.org/3/guest_session/${token}/rated/movies?api_key=174f3d1cd84f12ef2ac5c402cc19a666&language=en-US&sort_by=created_at.asc&page=${page}`
+      `https://api.themoviedb.org/3/guest_session/${token}/rated/movies?api_key=174f3d1cd84f12ef2ac5c402cc19a666&language=en-US&sort_by=created_at.asc&page=${needPage}`
     );
   };
 
   static setRate = async (rateNum, movieId) => {
+    const token = localStorage.getItem("token");
     const request = await fetch(
-      `https://api.themoviedb.org/3/movie/${movieId}/rating?api_key=174f3d1cd84f12ef2ac5c402cc19a666&guest_session_id=dd7078c9124ef4fa5a2cd94b5beed17e`,
+      `https://api.themoviedb.org/3/movie/${movieId}/rating?api_key=174f3d1cd84f12ef2ac5c402cc19a666&guest_session_id=${token}`,
       {
         method: "POST",
         headers: {
@@ -41,7 +42,7 @@ class MovieService {
 
 // MovieService.getGuestToken();
 
-// MovieService.getGuestRateList(localStorage.getItem('token'), 2).then((data) =>
+// MovieService.getGuestRateList(localStorage.getItem('token'), 1).then((data) =>
 //     console.log(data),
 // );
 
