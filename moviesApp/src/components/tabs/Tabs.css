@@ -1,5 +1,5 @@
 .tabs {
-    margin: 13px auto 0 auto;
+    margin: 13px auto 20px auto;
     height: 51px;
 }
 
@@ -12,7 +12,7 @@
     color: rgba(0, 0, 0, 0.65);
     background-color: #ffffff;
     cursor: pointer;
-    padding-top: 19px;
+    padding-top: 15px;
     padding-bottom: 10px;
 }
 
@@ -40,5 +40,5 @@
     color: #1890ff;
     border-bottom: #1890ff 2px solid;
     padding-bottom: 9px;
-    padding-top: 20px;
+    padding-top: 16px;
 }

@@ -1,6 +1,19 @@
 class Request {
-  static sendRequest = async (url) => {
+  static getRequest = async (url) => {
     const request = await fetch(url);
+    const result = await request.json();
+
+    return result;
+  };
+
+  static postRequest = async (url, body) => {
+    const request = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body,
+    });
     const result = await request.json();
 
     return result;
@@ -8,5 +21,3 @@ class Request {
 }
 
 export default Request;
-
-// https://api.themoviedb.org/3/movie/635744/rating?api_key=174f3d1cd84f12ef2ac5c402cc19a666&guest_session_id=53f32a0b4f52234021bef57b96f2c8af

@@ -1,32 +1,13 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import PropTypes from "prop-types";
-import { format } from "date-fns";
 import { Rate } from "antd";
+import getRightDataFormat from "../../utils/getRightFormat";
+import getRateStatus from "../../utils/getRateStatus";
 import { ContextConsumer } from "../../services/ContextProvider";
-import MovieService from "../../services/movies-service";
 import Gender from "../gender";
 import cutsOverview from "../../utils/cutsOverview";
 import image from "./ex.jpg";
-
-const getRightDataFormat = (date) => {
-  if (date === "") {
-    return "Release date unknown";
-  }
-  return format(new Date(date), "LLLL d, yyyy");
-};
-
-const getRateStatus = (currentId, movieRateList) => {
-  let resultRate = 0;
-
-  movieRateList.forEach(({ id, rating }) => {
-    if (id === currentId) {
-      resultRate = rating;
-    }
-  });
-
-  return resultRate;
-};
 
 const MovieItem = (props) => {
   const {
@@ -36,11 +17,12 @@ const MovieItem = (props) => {
     overview,
     release_date: date,
     id,
+    movieRateList,
   } = props;
 
   return (
     <ContextConsumer>
-      {({ movieRateList, getGuestRateList, cleanGuestRateList, workMode }) => (
+      {({ setRate }) => (
         <div className="movie-item">
           <img
             src={image}
@@ -61,9 +43,7 @@ const MovieItem = (props) => {
             className="movie-item__rate"
             count={10}
             onChange={(num) => {
-              MovieService.setRate(num, id);
-              cleanGuestRateList();
-              getGuestRateList(1);
+              setRate(num, id);
             }}
           />
         </div>
@@ -79,6 +59,7 @@ MovieItem.propTypes = {
   overview: PropTypes.string.isRequired,
   release_date: PropTypes.string,
   id: PropTypes.number.isRequired,
+  movieRateList: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 MovieItem.defaultProps = {

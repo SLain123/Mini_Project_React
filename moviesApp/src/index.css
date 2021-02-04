@@ -8,35 +8,11 @@ body {
 /* antd style ================================================================ */
 
 .ant-spin {
-    width: 100%;
-    display: flex !important;
-    flex-flow: column;
-    align-items: center;
-    justify-content: center;
+    margin: auto !important;
 }
 
 .ant-spin-text {
     margin-top: 15px;
-}
-
-.ant-alert {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 5px;
-}
-
-.anticon {
-    text-align: center;
-}
-
-.ant-alert-content {
-    font-size: 20px;
-}
-
-.ant-alert-message {
-    color: red;
 }
 
 .ant-pagination {

@@ -1,7 +1,7 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/no-unused-state */
 import React, { Component } from "react";
 import * as _ from "lodash";
+import { Spin } from "antd";
+import ErrorMessage from "../errorMessage";
 import Tabs from "../tabs";
 import Search from "../search";
 import MovieService from "../../services/movies-service";
@@ -11,8 +11,8 @@ import { ContextProvider } from "../../services/ContextProvider";
 class App extends Component {
   state = {
     movieSearchList: [],
-    onloading: true,
-    onFail: false,
+    onloadingSearch: true,
+    onFailSearch: false,
     searchWord: "",
     page: 1,
     totalResults: null,
@@ -25,13 +25,13 @@ class App extends Component {
           movieSearchList: results,
           totalResults,
           page,
-          onloading: false,
+          onloadingSearch: false,
         });
       })
       .catch((error) => {
         this.setState({
-          onFail: error,
-          onloading: false,
+          onFailSearch: error,
+          onloadingSearch: false,
         });
       });
   }, 500);
@@ -54,7 +54,7 @@ class App extends Component {
   changeSearchWord = (searchWord) => {
     if (searchWord !== "") {
       this.setState({
-        onloading: true,
+        onloadingSearch: true,
       });
     }
 
@@ -67,20 +67,36 @@ class App extends Component {
   changePage = (page) => {
     this.setState({
       page,
-      onloading: true,
+      onloadingSearch: true,
     });
   };
 
   render() {
     const {
       movieSearchList,
-      onloading,
-      onFail,
+      onloadingSearch,
+      onFailSearch,
       searchWord,
       page,
       totalResults,
       workMode,
     } = this.state;
+
+    const loadContent = onloadingSearch ? (
+      <Spin tip="Loading..." size="large" />
+    ) : (
+      <MovieList
+        movieSearchList={movieSearchList}
+        page={page}
+        totalResults={totalResults}
+        changePage={this.changePage}
+        workMode={workMode}
+      />
+    );
+
+    if (onFailSearch) {
+      return <ErrorMessage error={onFailSearch} />;
+    }
 
     return (
       <ContextProvider>
@@ -90,15 +106,7 @@ class App extends Component {
             searchWord={searchWord}
             changeSearchWord={this.changeSearchWord}
           />
-          <MovieList
-            movieSearchList={movieSearchList}
-            onloading={onloading}
-            onFail={onFail}
-            page={page}
-            totalResults={totalResults}
-            changePage={this.changePage}
-            workMode={workMode}
-          />
+          {loadContent}
         </div>
       </ContextProvider>
     );
