@@ -1,9 +1,12 @@
-.gender {
+.genre {
     display: flex;
-    min-height: 27px;
+    min-height: 50px;
+    flex-flow: wrap;
+    max-height: 50px;
+    max-width: 190px;
 }
 
-.gender__text {
+.genre__text {
     font-size: 12px;
     line-height: 15px;
     color: rgba(0, 0, 0, 0.65);
@@ -13,6 +16,8 @@
     border-radius: 2px;
     padding: 2px 3px;
     height: 20px;
+    max-width: 92px;
     margin-bottom: 7px;
     margin-right: 8px;
+    white-space: nowrap;
 }

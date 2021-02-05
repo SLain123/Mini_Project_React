@@ -4,13 +4,13 @@
     flex-flow: column wrap;
     filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.15));
     background-color: #ffffff;
-    max-height: 281px;
-    min-height: 245px;
+    max-height: 330px;
+    min-height: 290px;
 }
 
 .movie-item__img {
     max-width: 183px;
-    max-height: 281px;
+    max-height: 292px;
     margin-right: 20px;
 }
 
@@ -20,7 +20,7 @@
     color: black;
     margin-top: 10px;
     margin-bottom: 7px;
-    max-width: 67%;
+    max-width: 60%;
     width: 100%;
     max-height: 55px;
     height: 55px;
@@ -38,10 +38,10 @@
     max-height: 110px;
     overflow: hidden;
     color: black;
-    max-width: 55%;
+    max-width: 50%;
     min-width: 245px;
     margin-bottom: 0;
-    height: 110px;
+    min-height: 110px;
 }
 
 .movie-item__rate {
@@ -65,7 +65,7 @@
     }
 
     .movie-item__title {
-        max-width: 215px;
+        max-width: 205px;
         margin-top: 0;
     }
 
@@ -88,9 +88,19 @@
     }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 767px) {
     .movie-item__title {
-        max-width: 170px;
+        max-width: 365px;
+    }
+}
+
+@media (max-width: 459px) {
+    .movie-item__title {
+        max-width: 160px;
         margin-top: 0;
+    }
+
+    .movie-item {
+        min-height: 290px;
     }
 }

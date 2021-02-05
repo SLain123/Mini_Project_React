@@ -7,14 +7,17 @@ const { Provider, Consumer } = React.createContext();
 class ContextProvider extends Component {
   state = {
     movieRateList: [],
+    genresListPattern: [],
     workMode: "search",
     onloadingRate: false,
     onFailDownloadRate: false,
     onFailUploadRate: false,
+    onFailGenres: false,
   };
 
   componentDidMount() {
     this.getGuestRateList(1);
+    this.getGenres();
   }
 
   getGuestRateList = (needPage) => {
@@ -28,9 +31,7 @@ class ContextProvider extends Component {
       });
     };
 
-    const token = localStorage.getItem("token");
-
-    MovieService.getGuestRateList(token, needPage)
+    MovieService.getGuestRateList(needPage)
       .then(({ results, total_pages: totalPage, page }) => {
         if (results.length === 20 && page !== totalPage) {
           this.getGuestRateList(needPage + 1);
@@ -74,6 +75,12 @@ class ContextProvider extends Component {
     });
   };
 
+  getGenres = () => {
+    MovieService.getGenres()
+      .then((genresListPattern) => this.setState({ genresListPattern }))
+      .catch((error) => this.setState({ onFailGenres: error }));
+  };
+
   render() {
     const {
       movieRateList,
@@ -81,21 +88,25 @@ class ContextProvider extends Component {
       onFailDownloadRate,
       onFailUploadRate,
       onloadingRate,
+      genresListPattern,
+      onFailGenres,
     } = this.state;
     const { children } = this.props;
 
     return (
       <Provider
         value={{
-          movieRateList,
           getGuestRateList: this.getGuestRateList,
           cleanGuestRateList: this.cleanGuestRateList,
           changeWorkMode: this.changeWorkMode,
           setRate: this.setRate,
+          workMode,
+          movieRateList,
           onFailDownloadRate,
           onFailUploadRate,
           onloadingRate,
-          workMode,
+          genresListPattern,
+          onFailGenres,
         }}
       >
         {children}

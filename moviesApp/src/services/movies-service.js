@@ -1,4 +1,3 @@
-/* eslint-disable arrow-body-style */
 import Request from "./request-service";
 
 class MovieService {
@@ -12,16 +11,17 @@ class MovieService {
   static getGuestToken = () =>
     Request.getRequest(
       "https://api.themoviedb.org/3/authentication/guest_session/new?api_key=174f3d1cd84f12ef2ac5c402cc19a666"
-    ).then(({ guest_session_id: token, expires_at: expData }) => {
+    ).then(({ guest_session_id: token, expires_at: expDate }) => {
       localStorage.setItem("token", token);
-      localStorage.setItem("expData", expData);
+      localStorage.setItem("expDate", expDate);
     });
 
-  static getGuestRateList = (token, needPage) => {
-    return Request.getRequest(
-      `https://api.themoviedb.org/3/guest_session/${token}/rated/movies?api_key=174f3d1cd84f12ef2ac5c402cc19a666&language=en-US&sort_by=created_at.asc&page=${needPage}`
+  static getGuestRateList = (needPage) =>
+    MovieService.returnRightToken().then((token) =>
+      Request.getRequest(
+        `https://api.themoviedb.org/3/guest_session/${token}/rated/movies?api_key=174f3d1cd84f12ef2ac5c402cc19a666&language=en-US&sort_by=created_at.asc&page=${needPage}`
+      )
     );
-  };
 
   static setRate = async (rateNum, movieId) => {
     const token = localStorage.getItem("token");
@@ -31,13 +31,36 @@ class MovieService {
       JSON.stringify({ value: rateNum })
     );
   };
+
+  static returnRightToken = async () => {
+    const expDate = new Date(localStorage.getItem("expDate"));
+    const currentDate = new Date();
+
+    if (expDate <= currentDate) {
+      await MovieService.getGuestToken();
+      return localStorage.getItem("token");
+    }
+
+    return localStorage.getItem("token");
+  };
+
+  static getGenres = () =>
+    Request.getRequest(
+      "https://api.themoviedb.org/3/genre/movie/list?api_key=174f3d1cd84f12ef2ac5c402cc19a666&language=en-US"
+    ).then(({ genres }) => genres);
 }
+
+// MovieService.getGenres().then((data) => console.log(data));
+
+// localStorage.setItem('expDate', JSON.stringify(new Date()));
 
 // MovieService.getGuestToken();
 
 // MovieService.getGuestRateList(localStorage.getItem('token'), 1).then((data) =>
 //     console.log(data),
 // );
+
+// MovieService.returnRightToken().then((data) => console.log(data));
 
 export default MovieService;
 
