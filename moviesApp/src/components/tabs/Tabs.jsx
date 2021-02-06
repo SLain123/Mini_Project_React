@@ -29,6 +29,9 @@ const Tabs = () => (
         >
           Rated
         </button>
+        <a href="#head" className="tabs-anchor">
+          ANCHOR
+        </a>
       </header>
     )}
   </ContextConsumer>

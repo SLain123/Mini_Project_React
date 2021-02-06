@@ -16,6 +16,7 @@ class App extends Component {
     searchWord: "",
     page: 1,
     totalResults: null,
+    scroll: false,
   };
 
   updateMovieList = _.debounce((searchWord, searchPage) => {
@@ -34,7 +35,7 @@ class App extends Component {
           onloadingSearch: false,
         });
       });
-  }, 500);
+  }, 300);
 
   componentDidMount() {
     this.updateMovieList("return", 1);
@@ -68,7 +69,27 @@ class App extends Component {
     this.setState({
       page,
       onloadingSearch: true,
+      scroll: true,
     });
+    this.scrollToTop();
+  };
+
+  scrollToTop = () => {
+    const { scroll, onloadingSearch } = this.state;
+
+    setTimeout(() => {
+      if (!onloadingSearch && scroll) {
+        document.querySelector('a[href*="#"]').scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+        this.setState({
+          scroll: false,
+        });
+      } else {
+        this.scrollToTop();
+      }
+    }, 250);
   };
 
   render() {
