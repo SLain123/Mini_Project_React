@@ -50,18 +50,6 @@ class MovieService {
     ).then(({ genres }) => genres);
 }
 
-// MovieService.getGenres().then((data) => console.log(data));
-
-// localStorage.setItem('expDate', JSON.stringify(new Date()));
-
-// MovieService.getGuestToken();
-
-// MovieService.getGuestRateList(localStorage.getItem('token'), 1).then((data) =>
-//     console.log(data),
-// );
-
-// MovieService.returnRightToken().then((data) => console.log(data));
-
 export default MovieService;
 
 // 174f3d1cd84f12ef2ac5c402cc19a666

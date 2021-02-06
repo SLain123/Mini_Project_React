@@ -6,12 +6,16 @@
     background-color: #ffffff;
     max-height: 330px;
     min-height: 290px;
+    border-radius: 3px;
 }
 
 .movie-item__img {
     max-width: 183px;
     max-height: 292px;
     margin-right: 20px;
+    object-fit: cover;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
 }
 
 .movie-item__title {

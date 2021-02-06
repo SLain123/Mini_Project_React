@@ -4,7 +4,7 @@ import { ContextConsumer } from "../../services/ContextProvider";
 const Tabs = () => (
   <ContextConsumer>
     {({ workMode, changeWorkMode }) => (
-      <div className="tabs">
+      <header className="tabs">
         <button
           className={
             workMode === "search" ? "tabs__btn tabs__btn_active" : "tabs__btn"
@@ -29,7 +29,7 @@ const Tabs = () => (
         >
           Rated
         </button>
-      </div>
+      </header>
     )}
   </ContextConsumer>
 );
