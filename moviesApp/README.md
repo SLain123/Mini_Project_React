@@ -25,3 +25,5 @@ Runs eslint with fix.
 ### `npm run format`
 
 Runs prettier with formating code.
+
+Build project: http://movies-db.surge.sh/
