@@ -31,10 +31,27 @@ class Task extends Component {
     addEditTask: PropTypes.func.isRequired,
     editingInput: PropTypes.string.isRequired,
     changeLable: PropTypes.func.isRequired,
+    controlTime: PropTypes.number,
+    changeControlTime: PropTypes.func.isRequired,
   };
 
+  static defaultProps = {
+    controlTime: 0,
+  };
+
+  componentDidMount() {
+    const { controlTime } = this.props;
+
+    this.setState({
+      spentTime: controlTime,
+    });
+  }
+
   componentWillUnmount() {
+    const { changeControlTime, id } = this.props;
+    const { spentTime } = this.state;
     this.stopTimer();
+    changeControlTime(id, spentTime);
   }
 
   startTimer = () => {

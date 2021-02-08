@@ -4,7 +4,7 @@ import TaskList from '../taskList';
 import Footer from '../footer';
 
 class App extends Component {
-  genId = 1;
+  genId = 0;
 
   state = {
     tasks: [
@@ -23,7 +23,7 @@ class App extends Component {
 
   clearComplited = () => {
     this.setState(({ tasks }) => {
-      const resultArr = tasks.filter((task) => (!task.isDone ? task : null));
+      const resultArr = tasks.filter((task) => !task.isDone && task);
 
       return { tasks: resultArr };
     });
@@ -87,6 +87,25 @@ class App extends Component {
     });
   };
 
+  changeControlTime = (id, controlTime) => {
+    this.setState(({ tasks }) => {
+      const index = tasks.findIndex((task) => task.id === id);
+
+      if (tasks[index]) {
+        const currentTask = {
+          ...tasks[index],
+          controlTime,
+        };
+        const resultArr = [...tasks.slice(0, index), currentTask, ...tasks.slice(index + 1)];
+
+        return {
+          tasks: resultArr,
+        };
+      }
+      return null;
+    });
+  };
+
   createTaskPattern(lable, isDone = false, timeToCreate = new Date()) {
     this.genId += 1;
 
@@ -96,6 +115,7 @@ class App extends Component {
       timeToCreate,
       isDone,
       isEdit: false,
+      controlTime: 0,
     };
   }
 
@@ -113,6 +133,7 @@ class App extends Component {
             changeRemoveTask={this.changeRemoveTask}
             addEditTask={this.addEditTask}
             changeLable={this.changeLable}
+            changeControlTime={this.changeControlTime}
           />
         </section>
         <Footer
