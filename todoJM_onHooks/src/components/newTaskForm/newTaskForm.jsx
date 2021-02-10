@@ -1,42 +1,29 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-class NewTaskForm extends Component {
-  state = {
-    input: '',
-  };
+const NewTaskForm = ({ addEditTask }) => {
+  const [input, setInput] = useState('');
 
-  static propTypes = {
-    addEditTask: PropTypes.func.isRequired,
-  };
+  return (
+    <input
+      className="new-todo"
+      placeholder="What needs to be done?"
+      value={input}
+      onChange={(evt) => {
+        setInput(evt.target.value);
+      }}
+      onKeyDown={(evt) => {
+        if (evt.key === 'Enter') {
+          addEditTask(input);
+          setInput('');
+        }
+      }}
+    />
+  );
+};
 
-  onChangeInput = (text) => {
-    this.setState({
-      input: text,
-    });
-  };
-
-  render() {
-    const { input } = this.state;
-    const { addEditTask } = this.props;
-
-    return (
-      <input
-        className="new-todo"
-        placeholder="What needs to be done?"
-        value={input}
-        onChange={(evt) => {
-          this.onChangeInput(evt.target.value);
-        }}
-        onKeyDown={(evt) => {
-          if (evt.key === 'Enter') {
-            addEditTask(input);
-            this.onChangeInput('');
-          }
-        }}
-      />
-    );
-  }
-}
+NewTaskForm.propTypes = {
+  addEditTask: PropTypes.func.isRequired,
+};
 
 export default NewTaskForm;
