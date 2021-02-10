@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 
@@ -15,139 +15,114 @@ const getTime = (ms) => {
   return `${hours}:${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
 };
 
-class Task extends Component {
-  state = {
-    spentTime: 0,
-    runTimer: false,
-  };
+const Task = ({
+  id,
+  lable,
+  timeToCreate,
+  isDone,
+  isEdit,
+  changeRemoveTask,
+  addEditTask,
+  editingInput,
+  changeLable,
+  controlTime,
+  // changeControlTime,
+}) => {
+  const [timer, setTimer] = useState(null);
+  const [spentTime, setSpentTime] = useState(controlTime);
+  const [runTimer, setRunTimer] = useState(false);
 
-  static propTypes = {
-    id: PropTypes.number.isRequired,
-    lable: PropTypes.string.isRequired,
-    timeToCreate: PropTypes.instanceOf(Date).isRequired,
-    isDone: PropTypes.bool.isRequired,
-    isEdit: PropTypes.bool.isRequired,
-    changeRemoveTask: PropTypes.func.isRequired,
-    addEditTask: PropTypes.func.isRequired,
-    editingInput: PropTypes.string.isRequired,
-    changeLable: PropTypes.func.isRequired,
-    controlTime: PropTypes.number,
-    changeControlTime: PropTypes.func.isRequired,
-  };
-
-  static defaultProps = {
-    controlTime: 0,
-  };
-
-  componentDidMount() {
-    const { controlTime } = this.props;
-
-    this.setState({
-      spentTime: controlTime,
-    });
-  }
-
-  componentWillUnmount() {
-    const { changeControlTime, id } = this.props;
-    const { spentTime } = this.state;
-    this.stopTimer();
-    changeControlTime(id, spentTime);
-  }
-
-  startTimer = () => {
-    const { runTimer } = this.state;
-
+  const startTimer = () => {
     if (!runTimer) {
-      this.setState({
-        runTimer: true,
-      });
+      setRunTimer(true);
 
-      this.timer = setInterval(() => {
-        this.setState(({ spentTime }) => {
-          const nowTime = spentTime + 1;
-
-          return {
-            spentTime: nowTime,
-          };
-        });
-      }, 1000);
+      const thisTimer = setInterval(() => setSpentTime((sec) => sec + 1), 1000);
+      setTimer(thisTimer);
     }
   };
 
-  stopTimer = () => {
-    clearInterval(this.timer);
+  const stopTimer = useCallback(() => {
+    console.log('stop');
+    clearInterval(timer);
+    setRunTimer(false);
+  }, [timer]);
 
-    this.setState({
-      runTimer: false,
-    });
-  };
+  useEffect(
+    () => () => {
+      stopTimer();
+      // changeControlTime(id, spentTime);
+    },
+    [stopTimer]
+  );
 
-  render() {
-    const {
-      id,
-      lable,
-      timeToCreate,
-      isDone,
-      isEdit,
-      changeRemoveTask,
-      addEditTask,
-      editingInput,
-      changeLable,
-    } = this.props;
+  const editInput = isEdit ? (
+    <input
+      type="text"
+      className="edit"
+      value={editingInput}
+      onChange={(evt) => changeLable(evt.target.value)}
+      onKeyDown={(evt) => (evt.key === 'Enter' ? addEditTask(editingInput, id) : null)}
+    />
+  ) : null;
 
-    const { spentTime } = this.state;
+  return (
+    <>
+      <div className="view">
+        <input
+          className="toggle"
+          onClick={() => changeRemoveTask(id, 'change', 'isDone')}
+          type="checkbox"
+          defaultChecked={isDone}
+        />
+        <label>
+          <span className="title">{lable}</span>
+          <span className="description">
+            <button aria-label="start timer" type="button" className="icon icon-play" onClick={startTimer} />
+            <button aria-label="pause timer" type="button" className="icon icon-pause" onClick={stopTimer} />
+            {getTime(spentTime)}
+          </span>
+          <span className="description">{`created ${formatDistanceToNow(new Date(timeToCreate), {
+            addSuffix: true,
+            includeSeconds: true,
+          })}`}</span>
+        </label>
+        <button
+          aria-label="change task lable"
+          className="icon icon-edit"
+          onClick={() => {
+            changeRemoveTask(id, 'change', 'isEdit');
+            changeLable(lable);
+          }}
+          type="button"
+        />
+        <button
+          aria-label="remove task"
+          className="icon icon-destroy"
+          onClick={() => changeRemoveTask(id, 'remove')}
+          type="button"
+        />
+      </div>
+      {editInput}
+    </>
+  );
+};
 
-    const editInput = isEdit ? (
-      <input
-        type="text"
-        className="edit"
-        value={editingInput}
-        onChange={(evt) => changeLable(evt.target.value)}
-        onKeyDown={(evt) => (evt.key === 'Enter' ? addEditTask(editingInput, id) : null)}
-      />
-    ) : null;
+Task.propTypes = {
+  id: PropTypes.number.isRequired,
+  lable: PropTypes.string.isRequired,
+  timeToCreate: PropTypes.instanceOf(Date).isRequired,
+  isDone: PropTypes.bool.isRequired,
+  isEdit: PropTypes.bool.isRequired,
+  changeRemoveTask: PropTypes.func.isRequired,
+  addEditTask: PropTypes.func.isRequired,
+  editingInput: PropTypes.string.isRequired,
+  changeLable: PropTypes.func.isRequired,
+  controlTime: PropTypes.number,
+  // changeControlTime: PropTypes.func.isRequired,
+};
 
-    return (
-      <>
-        <div className="view">
-          <input
-            className="toggle"
-            onClick={() => changeRemoveTask(id, 'change', 'isDone')}
-            type="checkbox"
-            defaultChecked={isDone}
-          />
-          <label>
-            <span className="title">{lable}</span>
-            <span className="description">
-              <button aria-label="start timer" type="button" className="icon icon-play" onClick={this.startTimer} />
-              <button aria-label="pause timer" type="button" className="icon icon-pause" onClick={this.stopTimer} />
-              {getTime(spentTime)}
-            </span>
-            <span className="description">{`created ${formatDistanceToNow(new Date(timeToCreate), {
-              addSuffix: true,
-              includeSeconds: true,
-            })}`}</span>
-          </label>
-          <button
-            aria-label="change task lable"
-            className="icon icon-edit"
-            onClick={() => {
-              changeRemoveTask(id, 'change', 'isEdit');
-              changeLable(lable);
-            }}
-            type="button"
-          />
-          <button
-            aria-label="remove task"
-            className="icon icon-destroy"
-            onClick={() => changeRemoveTask(id, 'remove')}
-            type="button"
-          />
-        </div>
-        {editInput}
-      </>
-    );
-  }
-}
+Task.defaultProps = {
+  controlTime: 0,
+};
 
 export default Task;

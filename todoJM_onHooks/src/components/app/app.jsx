@@ -1,150 +1,115 @@
-import React, { Component } from 'react';
+/* eslint-disable no-plusplus */
+import React, { useState } from 'react';
 import Header from '../header';
 import TaskList from '../taskList';
 import Footer from '../footer';
 
-class App extends Component {
-  genId = 0;
+const createTaskPattern = (lable, id, isDone = false, timeToCreate = new Date()) => {
+  const task = {
+    id,
+    lable,
+    timeToCreate,
+    isDone,
+    isEdit: false,
+    controlTime: 0,
+  };
+  return task;
+};
 
-  state = {
-    tasks: [
-      this.createTaskPattern('Go shoping', true, new Date(2021, 0, 12)),
-      this.createTaskPattern('Make app', false, new Date(2020, 11, 11)),
-      this.createTaskPattern('Check tests', false, new Date(2020, 5, 1)),
-    ],
-    filter: 'all',
-    editingInput: '',
+const App = () => {
+  const [genId, setGenId] = useState(4);
+  const [tasks, setTasks] = useState([
+    createTaskPattern('Go shoping', 1, true, new Date(2021, 0, 12)),
+    createTaskPattern('Make app', 2, false, new Date(2020, 11, 11)),
+    createTaskPattern('Check tests', 3, false, new Date(2020, 5, 1)),
+  ]);
+
+  const [filter, setFilter] = useState('all');
+  const [editingInput, setEditingInput] = useState('');
+
+  const getActiveTasksLength = () => tasks.filter((task) => !task.isDone).length;
+
+  const clearComplited = () => {
+    const resultArr = tasks.filter((task) => !task.isDone && task);
+    setTasks(resultArr);
   };
 
-  getActiveTasksLength = () => {
-    const { tasks } = this.state;
-    return tasks.filter((task) => !task.isDone).length;
-  };
+  const changeRemoveTask = (id, act, prop) => {
+    const index = tasks.findIndex((task) => task.id === id);
+    let resultArr;
 
-  clearComplited = () => {
-    this.setState(({ tasks }) => {
-      const resultArr = tasks.filter((task) => !task.isDone && task);
-
-      return { tasks: resultArr };
-    });
-  };
-
-  setFilter = (filter) => {
-    this.setState({
-      filter,
-    });
-  };
-
-  changeRemoveTask = (id, act, prop) => {
-    this.setState(({ tasks }) => {
-      const index = tasks.findIndex((task) => task.id === id);
-      let resultArr;
-
-      if (act === 'change') {
-        const currentTask = {
-          ...tasks[index],
-          [prop]: !tasks[index][prop],
-        };
-        resultArr = [...tasks.slice(0, index), currentTask, ...tasks.slice(index + 1)];
-      } else if (act === 'remove') {
-        resultArr = [...tasks.slice(0, index), ...tasks.slice(index + 1)];
-      }
-
-      return { tasks: resultArr };
-    });
-  };
-
-  addEditTask = (newLable, id) => {
-    if (newLable && !id) {
-      this.setState(({ tasks }) => {
-        const resultArr = [...tasks, this.createTaskPattern(newLable)];
-
-        return {
-          tasks: resultArr,
-        };
-      });
-    } else if (newLable && id) {
-      this.setState(({ tasks }) => {
-        const index = tasks.findIndex((task) => task.id === id);
-
-        const currentTask = {
-          ...tasks[index],
-          lable: newLable,
-          isEdit: false,
-        };
-        const resultArr = [...tasks.slice(0, index), currentTask, ...tasks.slice(index + 1)];
-
-        return {
-          tasks: resultArr,
-        };
-      });
+    if (act === 'change') {
+      const currentTask = {
+        ...tasks[index],
+        [prop]: !tasks[index][prop],
+      };
+      resultArr = [...tasks.slice(0, index), currentTask, ...tasks.slice(index + 1)];
+    } else if (act === 'remove') {
+      resultArr = [...tasks.slice(0, index), ...tasks.slice(index + 1)];
     }
+
+    setTasks(resultArr);
   };
 
-  changeLable = (text) => {
-    this.setState({
-      editingInput: text,
-    });
-  };
+  const addEditTask = (newLable, id) => {
+    let resultArr;
 
-  changeControlTime = (id, controlTime) => {
-    this.setState(({ tasks }) => {
+    if (newLable && !id) {
+      resultArr = [...tasks, createTaskPattern(newLable, genId)];
+      setGenId(genId + 1);
+    } else if (newLable && id) {
       const index = tasks.findIndex((task) => task.id === id);
+      const currentTask = {
+        ...tasks[index],
+        lable: newLable,
+        isEdit: false,
+      };
+      resultArr = [...tasks.slice(0, index), currentTask, ...tasks.slice(index + 1)];
+    }
 
-      if (tasks[index]) {
-        const currentTask = {
-          ...tasks[index],
-          controlTime,
-        };
-        const resultArr = [...tasks.slice(0, index), currentTask, ...tasks.slice(index + 1)];
-
-        return {
-          tasks: resultArr,
-        };
-      }
-      return null;
-    });
+    setTasks(resultArr);
   };
 
-  createTaskPattern(lable, isDone = false, timeToCreate = new Date()) {
-    this.genId += 1;
+  const changeLable = (text) => {
+    setEditingInput(text);
+  };
 
-    return {
-      id: this.genId,
-      lable,
-      timeToCreate,
-      isDone,
-      isEdit: false,
-      controlTime: 0,
-    };
-  }
+  const changeControlTime = (id, controlTime) => {
+    const index = tasks.findIndex((task) => task.id === id);
+    let resultArr = tasks;
 
-  render() {
-    const { tasks, filter, editingInput } = this.state;
+    if (tasks[index]) {
+      const currentTask = {
+        ...tasks[index],
+        controlTime,
+      };
+      resultArr = [...tasks.slice(0, index), currentTask, ...tasks.slice(index + 1)];
+    }
+    setTasks(resultArr);
+  };
 
-    return (
-      <section className="todoapp">
-        <Header addEditTask={this.addEditTask} />
-        <section className="main">
-          <TaskList
-            tasks={tasks}
-            filter={filter}
-            editingInput={editingInput}
-            changeRemoveTask={this.changeRemoveTask}
-            addEditTask={this.addEditTask}
-            changeLable={this.changeLable}
-            changeControlTime={this.changeControlTime}
-          />
-        </section>
-        <Footer
-          setFilter={this.setFilter}
+  return (
+    <section className="todoapp">
+      <Header addEditTask={addEditTask} />
+      <section className="main">
+        <TaskList
+          tasks={tasks}
           filter={filter}
-          clearComplited={this.clearComplited}
-          getActiveTasksLength={this.getActiveTasksLength}
+          editingInput={editingInput}
+          changeRemoveTask={changeRemoveTask}
+          addEditTask={addEditTask}
+          changeLable={changeLable}
+          changeControlTime={changeControlTime}
         />
       </section>
-    );
-  }
-}
+      <Footer
+        setFilter={setFilter}
+        filter={filter}
+        clearComplited={clearComplited}
+        getActiveTasksLength={getActiveTasksLength}
+      />
+    </section>
+  );
+};
 
 export default App;
