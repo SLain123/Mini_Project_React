@@ -23,4 +23,4 @@ Runs eslint with fix.
 Runs prettier with formating code.
 
 Vercel:
-https://to-do-jm.vercel.app/
+https://to-do-jm.slain123.vercel.app/
