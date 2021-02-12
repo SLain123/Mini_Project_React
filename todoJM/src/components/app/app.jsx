@@ -8,17 +8,12 @@ class App extends Component {
 
   state = {
     tasks: [
-      this.createTaskPattern('Go shoping', true, new Date(2021, 0, 12)),
-      this.createTaskPattern('Make app', false, new Date(2020, 11, 11)),
-      this.createTaskPattern('Check tests', false, new Date(2020, 5, 1)),
+      this.createTaskPattern('Go shoping', 10, 0, false, true, new Date(2021, 0, 12)),
+      this.createTaskPattern('Make app', 12, 50, false, false, new Date(2020, 11, 11)),
+      this.createTaskPattern('Check tests'),
     ],
     filter: 'all',
     editingInput: '',
-  };
-
-  getActiveTasksLength = () => {
-    const { tasks } = this.state;
-    return tasks.filter((task) => !task.isDone).length;
   };
 
   clearComplited = () => {
@@ -54,10 +49,10 @@ class App extends Component {
     });
   };
 
-  addEditTask = (newLable, id) => {
+  addEditTask = (newLable, id, min, sec) => {
     if (newLable && !id) {
       this.setState(({ tasks }) => {
-        const resultArr = [...tasks, this.createTaskPattern(newLable)];
+        const resultArr = [...tasks, this.createTaskPattern(newLable, min, sec)];
 
         return {
           tasks: resultArr,
@@ -106,7 +101,7 @@ class App extends Component {
     });
   };
 
-  createTaskPattern(lable, isDone = false, timeToCreate = new Date()) {
+  createTaskPattern(lable, min = 0, sec = 0, runTimer = false, isDone = false, timeToCreate = new Date()) {
     this.genId += 1;
 
     return {
@@ -116,6 +111,9 @@ class App extends Component {
       isDone,
       isEdit: false,
       controlTime: 0,
+      min,
+      sec,
+      runTimer,
     };
   }
 
@@ -140,7 +138,7 @@ class App extends Component {
           setFilter={this.setFilter}
           filter={filter}
           clearComplited={this.clearComplited}
-          getActiveTasksLength={this.getActiveTasksLength}
+          activeTasksLength={tasks.filter((task) => !task.isDone).length}
         />
       </section>
     );

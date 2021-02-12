@@ -1,26 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 
-const getTime = (ms) => {
-  let time = ms;
-  const hours = Math.floor(time / 3600);
-  time -= hours * 3600;
-
-  const minutes = Math.floor(time / 60);
-  time -= minutes * 60;
-
-  const seconds = parseInt(time % 60, 10);
-
-  return `${hours}:${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
-};
-
 class Task extends Component {
-  state = {
-    spentTime: 0,
-    runTimer: false,
-  };
-
   static propTypes = {
     id: PropTypes.number.isRequired,
     lable: PropTypes.string.isRequired,
@@ -31,56 +14,22 @@ class Task extends Component {
     addEditTask: PropTypes.func.isRequired,
     editingInput: PropTypes.string.isRequired,
     changeLable: PropTypes.func.isRequired,
-    controlTime: PropTypes.number,
-    changeControlTime: PropTypes.func.isRequired,
+    min: PropTypes.number,
+    sec: PropTypes.number,
+    runTimer: PropTypes.bool,
   };
 
   static defaultProps = {
-    controlTime: 0,
+    min: 0,
+    sec: 0,
+    runTimer: false,
   };
 
-  componentDidMount() {
-    const { controlTime } = this.props;
+  componentWillUnmount() {}
 
-    this.setState({
-      spentTime: controlTime,
-    });
-  }
+  startTimer = () => {};
 
-  componentWillUnmount() {
-    const { changeControlTime, id } = this.props;
-    const { spentTime } = this.state;
-    this.stopTimer();
-    changeControlTime(id, spentTime);
-  }
-
-  startTimer = () => {
-    const { runTimer } = this.state;
-
-    if (!runTimer) {
-      this.setState({
-        runTimer: true,
-      });
-
-      this.timer = setInterval(() => {
-        this.setState(({ spentTime }) => {
-          const nowTime = spentTime + 1;
-
-          return {
-            spentTime: nowTime,
-          };
-        });
-      }, 1000);
-    }
-  };
-
-  stopTimer = () => {
-    clearInterval(this.timer);
-
-    this.setState({
-      runTimer: false,
-    });
-  };
+  stopTimer = () => {};
 
   render() {
     const {
@@ -93,9 +42,10 @@ class Task extends Component {
       addEditTask,
       editingInput,
       changeLable,
+      min,
+      sec,
+      runTimer,
     } = this.props;
-
-    const { spentTime } = this.state;
 
     const editInput = isEdit ? (
       <input
@@ -121,7 +71,6 @@ class Task extends Component {
             <span className="description">
               <button aria-label="start timer" type="button" className="icon icon-play" onClick={this.startTimer} />
               <button aria-label="pause timer" type="button" className="icon icon-pause" onClick={this.stopTimer} />
-              {getTime(spentTime)}
             </span>
             <span className="description">{`created ${formatDistanceToNow(new Date(timeToCreate), {
               addSuffix: true,
