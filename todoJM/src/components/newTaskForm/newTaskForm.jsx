@@ -32,7 +32,10 @@ class NewTaskForm extends Component {
     const { addEditTask } = this.props;
 
     if (evt.key === 'Enter' && inputTitle !== '' && inputTitle.match(/[\S]/) !== null) {
-      addEditTask(inputTitle, null, +inputMin, +inputSec);
+      const checkMin = inputMin > 1000 ? 999 : inputMin;
+      const checkSec = inputSec > 59 ? 0 : inputSec;
+
+      addEditTask(inputTitle, null, +checkMin, +checkSec);
       this.cleanForm();
     }
   };

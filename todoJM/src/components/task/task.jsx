@@ -3,7 +3,14 @@ import React, { Component } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 
+const getRightTimeFormat = (num) => {
+  const result = num <= 9 ? `0${num}` : String(num);
+  return result;
+};
+
 class Task extends Component {
+  state = { runTimer: false };
+
   static propTypes = {
     id: PropTypes.number.isRequired,
     lable: PropTypes.string.isRequired,
@@ -16,20 +23,43 @@ class Task extends Component {
     changeLable: PropTypes.func.isRequired,
     min: PropTypes.number,
     sec: PropTypes.number,
-    runTimer: PropTypes.bool,
+    changeTime: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     min: 0,
     sec: 0,
-    runTimer: false,
   };
 
-  componentWillUnmount() {}
+  startTimer = () => {
+    const { id, changeTime } = this.props;
+    const { runTimer } = this.state;
 
-  startTimer = () => {};
+    if (!runTimer) {
+      const timer = setInterval(() => changeTime(id), 1000);
+      localStorage.setItem(`timer${id}`, timer);
 
-  stopTimer = () => {};
+      this.setState({
+        runTimer: true,
+      });
+    }
+  };
+
+  stopTimer = () => {
+    const { id } = this.props;
+    const timer = localStorage.getItem(`timer${id}`);
+
+    clearInterval(timer);
+
+    this.setState({
+      runTimer: false,
+    });
+  };
+
+  getTime = () => {
+    const { min, sec } = this.props;
+    return <span className="time">{`${getRightTimeFormat(min)}:${getRightTimeFormat(sec)}`}</span>;
+  };
 
   render() {
     const {
@@ -42,9 +72,6 @@ class Task extends Component {
       addEditTask,
       editingInput,
       changeLable,
-      min,
-      sec,
-      runTimer,
     } = this.props;
 
     const editInput = isEdit ? (
@@ -68,14 +95,18 @@ class Task extends Component {
           />
           <label>
             <span className="title">{lable}</span>
-            <span className="description">
+            <span className="description description__timer-btn">
               <button aria-label="start timer" type="button" className="icon icon-play" onClick={this.startTimer} />
               <button aria-label="pause timer" type="button" className="icon icon-pause" onClick={this.stopTimer} />
             </span>
-            <span className="description">{`created ${formatDistanceToNow(new Date(timeToCreate), {
-              addSuffix: true,
-              includeSeconds: true,
-            })}`}</span>
+            {this.getTime()}
+            <span className="description description_max-width">{`created ${formatDistanceToNow(
+              new Date(timeToCreate),
+              {
+                addSuffix: true,
+                includeSeconds: true,
+              }
+            )}`}</span>
           </label>
           <button
             aria-label="change task lable"
@@ -89,7 +120,10 @@ class Task extends Component {
           <button
             aria-label="remove task"
             className="icon icon-destroy"
-            onClick={() => changeRemoveTask(id, 'remove')}
+            onClick={() => {
+              this.stopTimer();
+              changeRemoveTask(id, 'remove');
+            }}
             type="button"
           />
         </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Task from '../task';
 
-const TaskList = ({ tasks, filter, changeRemoveTask, addEditTask, editingInput, changeLable, changeControlTime }) => {
+const TaskList = ({ tasks, filter, changeRemoveTask, addEditTask, editingInput, changeLable, changeTime }) => {
   const itemList = tasks.map((task) => {
     const { id, isDone, isEdit } = task;
     let completedStyle;
@@ -22,7 +22,7 @@ const TaskList = ({ tasks, filter, changeRemoveTask, addEditTask, editingInput, 
             addEditTask={addEditTask}
             editingInput={editingInput}
             changeLable={changeLable}
-            changeControlTime={changeControlTime}
+            changeTime={changeTime}
           />
         </li>
       );
@@ -40,7 +40,7 @@ TaskList.propTypes = {
   addEditTask: PropTypes.func.isRequired,
   editingInput: PropTypes.string.isRequired,
   changeLable: PropTypes.func.isRequired,
-  changeControlTime: PropTypes.func.isRequired,
+  changeTime: PropTypes.func.isRequired,
 };
 
 TaskList.defaultProps = {

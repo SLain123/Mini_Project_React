@@ -8,8 +8,8 @@ class App extends Component {
 
   state = {
     tasks: [
-      this.createTaskPattern('Go shoping', 10, 0, false, true, new Date(2021, 0, 12)),
-      this.createTaskPattern('Make app', 12, 50, false, false, new Date(2020, 11, 11)),
+      this.createTaskPattern('Go shoping', 1, 20, true, new Date(2021, 0, 12)),
+      this.createTaskPattern('Make app', 12, 50, false, new Date(2020, 11, 11)),
       this.createTaskPattern('Check tests'),
     ],
     filter: 'all',
@@ -18,7 +18,14 @@ class App extends Component {
 
   clearComplited = () => {
     this.setState(({ tasks }) => {
-      const resultArr = tasks.filter((task) => !task.isDone && task);
+      const resultArr = [];
+      tasks.forEach((task) => {
+        const { id, isDone } = task;
+        if (isDone) {
+          const timer = localStorage.getItem(`timer${id}`);
+          clearInterval(timer);
+        } else resultArr.push(task);
+      });
 
       return { tasks: resultArr };
     });
@@ -82,26 +89,41 @@ class App extends Component {
     });
   };
 
-  changeControlTime = (id, controlTime) => {
+  changeTime = (id) => {
     this.setState(({ tasks }) => {
       const index = tasks.findIndex((task) => task.id === id);
+      const { min, sec } = tasks[index];
 
-      if (tasks[index]) {
-        const currentTask = {
-          ...tasks[index],
-          controlTime,
-        };
-        const resultArr = [...tasks.slice(0, index), currentTask, ...tasks.slice(index + 1)];
-
-        return {
-          tasks: resultArr,
-        };
+      if (min === 0 && sec === 0) {
+        return null;
       }
-      return null;
+
+      let newSec;
+      let newMin;
+
+      if (sec === 0) {
+        newMin = min - 1;
+        newSec = 59;
+      } else {
+        newMin = min;
+        newSec = sec - 1;
+      }
+
+      const currentTask = {
+        ...tasks[index],
+        min: newMin,
+        sec: newSec,
+      };
+
+      const resultArr = [...tasks.slice(0, index), currentTask, ...tasks.slice(index + 1)];
+
+      return {
+        tasks: resultArr,
+      };
     });
   };
 
-  createTaskPattern(lable, min = 0, sec = 0, runTimer = false, isDone = false, timeToCreate = new Date()) {
+  createTaskPattern(lable, min = 0, sec = 0, isDone = false, timeToCreate = new Date()) {
     this.genId += 1;
 
     return {
@@ -110,10 +132,8 @@ class App extends Component {
       timeToCreate,
       isDone,
       isEdit: false,
-      controlTime: 0,
       min,
       sec,
-      runTimer,
     };
   }
 
@@ -131,7 +151,7 @@ class App extends Component {
             changeRemoveTask={this.changeRemoveTask}
             addEditTask={this.addEditTask}
             changeLable={this.changeLable}
-            changeControlTime={this.changeControlTime}
+            changeTime={this.changeTime}
           />
         </section>
         <Footer
