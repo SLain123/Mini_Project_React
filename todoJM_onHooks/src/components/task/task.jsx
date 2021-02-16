@@ -1,18 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 
-const getTime = (ms) => {
-  let time = ms;
-  const hours = Math.floor(time / 3600);
-  time -= hours * 3600;
-
-  const minutes = Math.floor(time / 60);
-  time -= minutes * 60;
-
-  const seconds = parseInt(time % 60, 10);
-
-  return `${hours}:${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+const getRightTimeFormat = (num) => {
+  const result = num <= 9 ? `0${num}` : String(num);
+  return result;
 };
 
 const Task = ({
@@ -23,45 +15,39 @@ const Task = ({
   isEdit,
   changeRemoveTask,
   addEditTask,
-  editingInput,
-  changeLable,
-  controlTime,
-  // changeControlTime,
+  inputLable,
+  setInputLable,
+  changeTime,
+  min,
+  sec,
 }) => {
-  const [timer, setTimer] = useState(null);
-  const [spentTime, setSpentTime] = useState(controlTime);
   const [runTimer, setRunTimer] = useState(false);
 
   const startTimer = () => {
     if (!runTimer) {
-      setRunTimer(true);
+      const timer = setInterval(() => changeTime(id), 1000);
+      localStorage.setItem(`timer${id}`, timer);
 
-      const thisTimer = setInterval(() => setSpentTime((sec) => sec + 1), 1000);
-      setTimer(thisTimer);
+      setRunTimer(true);
     }
   };
 
-  const stopTimer = useCallback(() => {
-    console.log('stop');
+  const stopTimer = () => {
+    const timer = localStorage.getItem(`timer${id}`);
     clearInterval(timer);
-    setRunTimer(false);
-  }, [timer]);
 
-  useEffect(
-    () => () => {
-      stopTimer();
-      // changeControlTime(id, spentTime);
-    },
-    [stopTimer]
-  );
+    setRunTimer(false);
+  };
+
+  const getTime = () => <span className="time">{`${getRightTimeFormat(min)}:${getRightTimeFormat(sec)}`}</span>;
 
   const editInput = isEdit ? (
     <input
       type="text"
       className="edit"
-      value={editingInput}
-      onChange={(evt) => changeLable(evt.target.value)}
-      onKeyDown={(evt) => (evt.key === 'Enter' ? addEditTask(editingInput, id) : null)}
+      value={inputLable}
+      onChange={(evt) => setInputLable(evt.target.value)}
+      onKeyDown={(evt) => (evt.key === 'Enter' ? addEditTask(inputLable, id) : null)}
     />
   ) : null;
 
@@ -76,12 +62,12 @@ const Task = ({
         />
         <label>
           <span className="title">{lable}</span>
-          <span className="description">
+          <span className="description description__timer-btn">
             <button aria-label="start timer" type="button" className="icon icon-play" onClick={startTimer} />
             <button aria-label="pause timer" type="button" className="icon icon-pause" onClick={stopTimer} />
-            {getTime(spentTime)}
           </span>
-          <span className="description">{`created ${formatDistanceToNow(new Date(timeToCreate), {
+          {getTime()}
+          <span className="description description_max-width">{`created ${formatDistanceToNow(new Date(timeToCreate), {
             addSuffix: true,
             includeSeconds: true,
           })}`}</span>
@@ -91,14 +77,17 @@ const Task = ({
           className="icon icon-edit"
           onClick={() => {
             changeRemoveTask(id, 'change', 'isEdit');
-            changeLable(lable);
+            setInputLable(lable);
           }}
           type="button"
         />
         <button
           aria-label="remove task"
           className="icon icon-destroy"
-          onClick={() => changeRemoveTask(id, 'remove')}
+          onClick={() => {
+            stopTimer();
+            changeRemoveTask(id, 'remove');
+          }}
           type="button"
         />
       </div>
@@ -108,21 +97,23 @@ const Task = ({
 };
 
 Task.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
   lable: PropTypes.string.isRequired,
   timeToCreate: PropTypes.instanceOf(Date).isRequired,
   isDone: PropTypes.bool.isRequired,
   isEdit: PropTypes.bool.isRequired,
   changeRemoveTask: PropTypes.func.isRequired,
   addEditTask: PropTypes.func.isRequired,
-  editingInput: PropTypes.string.isRequired,
-  changeLable: PropTypes.func.isRequired,
-  controlTime: PropTypes.number,
-  // changeControlTime: PropTypes.func.isRequired,
+  inputLable: PropTypes.string.isRequired,
+  setInputLable: PropTypes.func.isRequired,
+  min: PropTypes.number,
+  sec: PropTypes.number,
+  changeTime: PropTypes.func.isRequired,
 };
 
 Task.defaultProps = {
-  controlTime: 0,
+  min: 0,
+  sec: 0,
 };
 
 export default Task;

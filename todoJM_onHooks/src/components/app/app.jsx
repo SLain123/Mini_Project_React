@@ -1,36 +1,44 @@
-/* eslint-disable no-plusplus */
+/* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable react/button-has-type */
 import React, { useState } from 'react';
+import { uniqueId } from 'lodash';
 import Header from '../header';
 import TaskList from '../taskList';
 import Footer from '../footer';
 
-const createTaskPattern = (lable, id, isDone = false, timeToCreate = new Date()) => {
-  const task = {
-    id,
-    lable,
-    timeToCreate,
-    isDone,
-    isEdit: false,
-    controlTime: 0,
-  };
-  return task;
-};
-
 const App = () => {
-  const [genId, setGenId] = useState(4);
+  const createTaskPattern = (id, lable, min = 0, sec = 0, isDone = false, timeToCreate = new Date()) => {
+    const task = {
+      id,
+      lable,
+      timeToCreate,
+      isDone,
+      isEdit: false,
+      min,
+      sec,
+    };
+
+    return task;
+  };
+
   const [tasks, setTasks] = useState([
-    createTaskPattern('Go shoping', 1, true, new Date(2021, 0, 12)),
-    createTaskPattern('Make app', 2, false, new Date(2020, 11, 11)),
-    createTaskPattern('Check tests', 3, false, new Date(2020, 5, 1)),
+    createTaskPattern('s1', 'Go shoping', 1, 20, true, new Date(2021, 0, 12)),
+    createTaskPattern('s2', 'Make app', 12, 50, false, new Date(2020, 11, 11)),
+    createTaskPattern('s3', 'Check tests'),
   ]);
-
   const [filter, setFilter] = useState('all');
-  const [editingInput, setEditingInput] = useState('');
-
-  const getActiveTasksLength = () => tasks.filter((task) => !task.isDone).length;
+  const [inputLable, setInputLable] = useState('');
 
   const clearComplited = () => {
-    const resultArr = tasks.filter((task) => !task.isDone && task);
+    const resultArr = [];
+    tasks.forEach((task) => {
+      const { id, isDone } = task;
+      if (isDone) {
+        const timer = localStorage.getItem(`timer${id}`);
+        clearInterval(timer);
+      } else resultArr.push(task);
+    });
+
     setTasks(resultArr);
   };
 
@@ -51,40 +59,52 @@ const App = () => {
     setTasks(resultArr);
   };
 
-  const addEditTask = (newLable, id) => {
-    let resultArr;
-
+  const addEditTask = (newLable, id, min, sec) => {
     if (newLable && !id) {
-      resultArr = [...tasks, createTaskPattern(newLable, genId)];
-      setGenId(genId + 1);
+      const resultArr = [...tasks, createTaskPattern(uniqueId('n'), newLable, min, sec)];
+
+      setTasks(resultArr);
     } else if (newLable && id) {
       const index = tasks.findIndex((task) => task.id === id);
+
       const currentTask = {
         ...tasks[index],
         lable: newLable,
         isEdit: false,
       };
-      resultArr = [...tasks.slice(0, index), currentTask, ...tasks.slice(index + 1)];
+      const resultArr = [...tasks.slice(0, index), currentTask, ...tasks.slice(index + 1)];
+
+      setTasks(resultArr);
     }
-
-    setTasks(resultArr);
   };
 
-  const changeLable = (text) => {
-    setEditingInput(text);
-  };
-
-  const changeControlTime = (id, controlTime) => {
+  const changeTime = (id) => {
     const index = tasks.findIndex((task) => task.id === id);
-    let resultArr = tasks;
+    const { min, sec } = tasks[index];
 
-    if (tasks[index]) {
-      const currentTask = {
-        ...tasks[index],
-        controlTime,
-      };
-      resultArr = [...tasks.slice(0, index), currentTask, ...tasks.slice(index + 1)];
+    // if (min === 0 && sec === 0) {
+    //   return null;
+    // }
+
+    let newSec;
+    let newMin;
+
+    if (sec === 0) {
+      newMin = min - 1;
+      newSec = 59;
+    } else {
+      newMin = min;
+      newSec = sec - 1;
     }
+
+    const currentTask = {
+      ...tasks[index],
+      min: newMin,
+      sec: newSec,
+    };
+
+    const resultArr = [...tasks.slice(0, index), currentTask, ...tasks.slice(index + 1)];
+
     setTasks(resultArr);
   };
 
@@ -95,18 +115,18 @@ const App = () => {
         <TaskList
           tasks={tasks}
           filter={filter}
-          editingInput={editingInput}
+          setInputLable={setInputLable}
           changeRemoveTask={changeRemoveTask}
           addEditTask={addEditTask}
-          changeLable={changeLable}
-          changeControlTime={changeControlTime}
+          inputLable={inputLable}
+          changeTime={changeTime}
         />
       </section>
       <Footer
         setFilter={setFilter}
         filter={filter}
         clearComplited={clearComplited}
-        getActiveTasksLength={getActiveTasksLength}
+        activeTasksLength={tasks.filter((task) => !task.isDone).length}
       />
     </section>
   );
