@@ -24,7 +24,7 @@
 .task-form__title {
   position: relative;
   margin: 0;
-  min-width: 70%;
+  min-width: 60%;
 }
 
 .task-form label {
@@ -33,4 +33,13 @@
   width: 1px;
   height: 1px;
   margin: -1px;
+}
+
+input[type='number'] {
+  -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }

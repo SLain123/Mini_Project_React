@@ -1,6 +1,4 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable react/button-has-type */
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { uniqueId } from 'lodash';
 import Header from '../header';
 import TaskList from '../taskList';
@@ -78,35 +76,24 @@ const App = () => {
     }
   };
 
-  const changeTime = (id) => {
-    const index = tasks.findIndex((task) => task.id === id);
-    const { min, sec } = tasks[index];
+  const changeTime = useCallback((id, min, sec) => {
+    setTasks((oldTasks) => {
+      const index = oldTasks.findIndex((task) => task.id === id);
 
-    // if (min === 0 && sec === 0) {
-    //   return null;
-    // }
+      if (oldTasks[index]) {
+        const currentTask = {
+          ...oldTasks[index],
+          min,
+          sec,
+        };
 
-    let newSec;
-    let newMin;
+        const resultArr = [...oldTasks.slice(0, index), currentTask, ...oldTasks.slice(index + 1)];
 
-    if (sec === 0) {
-      newMin = min - 1;
-      newSec = 59;
-    } else {
-      newMin = min;
-      newSec = sec - 1;
-    }
-
-    const currentTask = {
-      ...tasks[index],
-      min: newMin,
-      sec: newSec,
-    };
-
-    const resultArr = [...tasks.slice(0, index), currentTask, ...tasks.slice(index + 1)];
-
-    setTasks(resultArr);
-  };
+        return resultArr;
+      }
+      return oldTasks;
+    });
+  }, []);
 
   return (
     <section className="todoapp">

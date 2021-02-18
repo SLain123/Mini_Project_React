@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 const NewTaskForm = ({ addEditTask }) => {
   const [inputTitle, setInputTitle] = useState('');
-  const [inputMin, setInputMin] = useState(0);
-  const [inputSec, setInputSec] = useState(0);
+  const [inputMin, setInputMin] = useState('');
+  const [inputSec, setInputSec] = useState('');
 
   const cleanForm = () => {
     setInputTitle('');
@@ -43,6 +43,7 @@ const NewTaskForm = ({ addEditTask }) => {
       <input
         className="task-form__min"
         placeholder="Min"
+        max={60}
         type="number"
         id="min"
         value={inputMin}
@@ -58,6 +59,7 @@ const NewTaskForm = ({ addEditTask }) => {
         className="task-form__sec"
         placeholder="Sec"
         type="number"
+        max={60}
         id="sec"
         value={inputSec}
         onChange={(evt) => {

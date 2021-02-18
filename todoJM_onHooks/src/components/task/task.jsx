@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect, useCallback } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 
@@ -21,25 +22,11 @@ const Task = ({
   min,
   sec,
 }) => {
-  const [runTimer, setRunTimer] = useState(false);
+  const [thatMin, setThatMin] = useState(min);
+  const [thatSec, setThatSec] = useState(sec);
+  const [isRun, setRun] = useState(false);
 
-  const startTimer = () => {
-    if (!runTimer) {
-      const timer = setInterval(() => changeTime(id), 1000);
-      localStorage.setItem(`timer${id}`, timer);
-
-      setRunTimer(true);
-    }
-  };
-
-  const stopTimer = () => {
-    const timer = localStorage.getItem(`timer${id}`);
-    clearInterval(timer);
-
-    setRunTimer(false);
-  };
-
-  const getTime = () => <span className="time">{`${getRightTimeFormat(min)}:${getRightTimeFormat(sec)}`}</span>;
+  const getTime = () => <span className="time">{`${getRightTimeFormat(thatMin)}:${getRightTimeFormat(thatSec)}`}</span>;
 
   const editInput = isEdit ? (
     <input
@@ -50,6 +37,27 @@ const Task = ({
       onKeyDown={(evt) => (evt.key === 'Enter' ? addEditTask(inputLable, id) : null)}
     />
   ) : null;
+
+  const startTimer = () => {
+    if (thatSec === 0 && thatMin > 0) {
+      setThatMin(thatMin - 1);
+      setThatSec(59);
+    } else if (thatSec > 0) {
+      setThatSec(thatSec - 1);
+    } else setRun(false);
+  };
+
+  useEffect(() => {
+    let baseTimer;
+    if (isRun) {
+      baseTimer = setInterval(startTimer, 1000);
+    }
+    return () => {
+      clearInterval(baseTimer);
+    };
+  });
+
+  useEffect(() => () => changeTime(id, thatMin, thatSec), [isRun, changeTime, id, thatMin, thatSec]);
 
   return (
     <>
@@ -63,8 +71,8 @@ const Task = ({
         <label>
           <span className="title">{lable}</span>
           <span className="description description__timer-btn">
-            <button aria-label="start timer" type="button" className="icon icon-play" onClick={startTimer} />
-            <button aria-label="pause timer" type="button" className="icon icon-pause" onClick={stopTimer} />
+            <button aria-label="start timer" type="button" className="icon icon-play" onClick={() => setRun(true)} />
+            <button aria-label="pause timer" type="button" className="icon icon-pause" onClick={() => setRun(false)} />
           </span>
           {getTime()}
           <span className="description description_max-width">{`created ${formatDistanceToNow(new Date(timeToCreate), {
@@ -85,7 +93,6 @@ const Task = ({
           aria-label="remove task"
           className="icon icon-destroy"
           onClick={() => {
-            stopTimer();
             changeRemoveTask(id, 'remove');
           }}
           type="button"
@@ -115,5 +122,4 @@ Task.defaultProps = {
   min: 0,
   sec: 0,
 };
-
 export default Task;

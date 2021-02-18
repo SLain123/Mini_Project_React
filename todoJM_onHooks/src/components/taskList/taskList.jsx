@@ -23,6 +23,7 @@ const TaskList = ({ tasks, filter, changeRemoveTask, addEditTask, inputLable, se
             inputLable={inputLable}
             setInputLable={setInputLable}
             changeTime={changeTime}
+            filter={filter}
           />
         </li>
       );
