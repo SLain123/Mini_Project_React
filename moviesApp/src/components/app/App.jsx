@@ -20,7 +20,8 @@ class App extends Component {
   };
 
   updateMovieList = _.debounce((searchWord, searchPage) => {
-    MovieService.getMoviesByTitle(searchWord, searchPage)
+    if(searchWord !== '' && searchWord.match(/[\S]/) !== null) {
+      MovieService.getMoviesByTitle(searchWord, searchPage)
       .then(({ results, total_results: totalResults, page }) => {
         this.setState({
           movieSearchList: results,
@@ -35,6 +36,7 @@ class App extends Component {
           onloadingSearch: false,
         });
       });
+    }
   }, 300);
 
   componentDidMount() {
@@ -53,7 +55,7 @@ class App extends Component {
   }
 
   changeSearchWord = (searchWord) => {
-    if (searchWord !== "") {
+    if (searchWord !== "" && searchWord.match(/[\S]/) !== null) {
       this.setState({
         onloadingSearch: true,
       });
