@@ -28,7 +28,7 @@ const MovieItem = ({
           <picture>
             <source
               media="(min-width: 1024px)"
-              srcSet={`http://image.tmdb.org/t/p/w1280${imgUrl}`}
+              srcSet={`https://image.tmdb.org/t/p/w1280${imgUrl}`}
             />
             <img
               className="movie-item__img"
