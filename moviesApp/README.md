@@ -26,4 +26,4 @@ Runs eslint with fix.
 
 Runs prettier with formating code.
 
-Build project: http://movies-db.surge.sh/
+Build project: https://movies-app.slain123.vercel.app/
