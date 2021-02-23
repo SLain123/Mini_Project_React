@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { ContextConsumer } from "../../services/ContextProvider";
+import { ContextConsumer } from "../contextProvider/ContextProvider";
 
 const SearchContent = ({ workMode, searchWord, changeSearchWord }) =>
   workMode === "search" ? (

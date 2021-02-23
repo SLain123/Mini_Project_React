@@ -1,5 +1,5 @@
 import React from "react";
-import { ContextConsumer } from "../../services/ContextProvider";
+import { ContextConsumer } from "../contextProvider/ContextProvider";
 
 const Tabs = () => (
   <ContextConsumer>

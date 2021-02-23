@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import * as _ from 'lodash';
+import { debounce } from 'lodash';
 import { Spin } from 'antd';
 import ErrorMessage from '../errorMessage';
 import Tabs from '../tabs';
 import Search from '../search';
 import MovieService from '../../services/movies-service';
 import MovieList from '../movie-list';
-import { ContextProvider } from '../../services/ContextProvider';
+import { ContextProvider } from '../contextProvider';
 
 class App extends Component {
     state = {
@@ -19,7 +19,7 @@ class App extends Component {
         scroll: false,
     };
 
-    updateMovieList = _.debounce((searchWord, searchPage) => {
+    updateMovieList = debounce((searchWord, searchPage) => {
         if (searchWord !== '' && searchWord.match(/[\S]/) !== null) {
             MovieService.getMoviesByTitle(searchWord, searchPage)
                 .then(({ results, total_results: totalResults, page }) => {
@@ -37,7 +37,7 @@ class App extends Component {
                     });
                 });
         }
-    }, 300);
+    }, 500);
 
     componentDidMount() {
         this.updateMovieList('return', 1);
@@ -120,10 +120,6 @@ class App extends Component {
         const isError = onFailSearch ? (
             <ErrorMessage error={onFailSearch} />
         ) : null;
-
-        // if (onFailSearch) {
-        //   return <ErrorMessage error={onFailSearch} />;
-        // }
 
         return (
             <ContextProvider>

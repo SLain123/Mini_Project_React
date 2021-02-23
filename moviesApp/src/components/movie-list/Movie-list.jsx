@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Row, Col, Pagination, Spin } from "antd";
 import ErrorMessage from "../errorMessage";
-import { ContextConsumer } from "../../services/ContextProvider";
+import { ContextConsumer } from "../contextProvider/ContextProvider";
 import MovieItem from "../movie-item";
 
 const MainContent = ({
