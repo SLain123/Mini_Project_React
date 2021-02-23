@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Rate } from 'antd';
-import getRightDataFormat from '../../utils/getRightFormat';
-import getRateStatus from '../../utils/getRateStatus';
+import { getRightDataFormat, getRateStatus, cutsOverview } from '../../utils';
 import { ContextConsumer } from '../contextProvider';
 import Genre from '../genre';
 import CyrcleRate from '../cyrcleRate';
-import cutsOverview from '../../utils/cutsOverview';
 
 const MovieItem = ({
     poster_path: imgPath,
@@ -53,7 +51,7 @@ const MovieItem = ({
                         />
                     </div>
                     <p className='movie-item__overview'>
-                        {cutsOverview(overview, 165)}
+                        {cutsOverview(overview, 155)}
                     </p>
                     <Rate
                         allowClear={false}

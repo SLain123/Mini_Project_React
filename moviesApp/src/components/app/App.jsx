@@ -17,26 +17,36 @@ class App extends Component {
         page: 1,
         totalResults: null,
         scroll: false,
+        tabs: [
+            {
+                id: 1,
+                label: 'Search',
+                aria: 'Select search section',
+            },
+            {
+                id: 2,
+                label: 'Rated',
+                aria: 'Select rate section',
+            },
+        ],
     };
 
     updateMovieList = debounce((searchWord, searchPage) => {
-        if (searchWord !== '' && searchWord.match(/[\S]/) !== null) {
-            MovieService.getMoviesByTitle(searchWord, searchPage)
-                .then(({ results, total_results: totalResults, page }) => {
-                    this.setState({
-                        movieSearchList: results,
-                        totalResults,
-                        page,
-                        onloadingSearch: false,
-                    });
-                })
-                .catch((error) => {
-                    this.setState({
-                        onFailSearch: error,
-                        onloadingSearch: false,
-                    });
+        MovieService.getMoviesByTitle(searchWord, searchPage)
+            .then(({ results, total_results: totalResults, page }) => {
+                this.setState({
+                    movieSearchList: results,
+                    totalResults,
+                    page,
+                    onloadingSearch: false,
                 });
-        }
+            })
+            .catch((error) => {
+                this.setState({
+                    onFailSearch: error,
+                    onloadingSearch: false,
+                });
+            });
     }, 500);
 
     componentDidMount() {
@@ -102,7 +112,7 @@ class App extends Component {
             searchWord,
             page,
             totalResults,
-            workMode,
+            tabs,
         } = this.state;
 
         const loadContent = onloadingSearch ? (
@@ -113,7 +123,6 @@ class App extends Component {
                 page={page}
                 totalResults={totalResults}
                 changePage={this.changePage}
-                workMode={workMode}
             />
         );
 
@@ -124,7 +133,7 @@ class App extends Component {
         return (
             <ContextProvider>
                 <div className='app'>
-                    <Tabs />
+                    <Tabs tabs={tabs} />
                     <Search
                         searchWord={searchWord}
                         changeSearchWord={this.changeSearchWord}

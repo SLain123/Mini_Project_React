@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { ContextConsumer } from "../contextProvider/ContextProvider";
 
 const SearchContent = ({ workMode, searchWord, changeSearchWord }) =>
-  workMode === "search" ? (
+  workMode === "Search" ? (
     <input
       className="search"
       type="input"
@@ -37,7 +37,7 @@ SearchContent.propTypes = {
 };
 
 SearchContent.defaultProps = {
-  workMode: "search",
+  workMode: "Search",
 };
 
 export default Search;

@@ -9,7 +9,7 @@ class ContextProvider extends Component {
     state = {
         movieRateList: [],
         genresListPattern: [],
-        workMode: 'search',
+        workMode: 'Search',
         onloadingRate: false,
         onFailDownloadRate: false,
         onFailUploadRate: false,
@@ -48,6 +48,9 @@ class ContextProvider extends Component {
     }, 2000);
 
     setRate = (num, id) => {
+        this.setState({
+            onloadingRate: true,
+        });
         MovieService.setRate(num, id)
             .then(({ success }) => {
                 if (success) {
@@ -66,7 +69,6 @@ class ContextProvider extends Component {
     cleanGuestRateList = () => {
         this.setState({
             movieRateList: [],
-            onloadingRate: true,
         });
     };
 
