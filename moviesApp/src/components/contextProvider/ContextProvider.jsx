@@ -23,9 +23,9 @@ class ContextProvider extends Component {
 
     getGuestRateList = throttle((needPage) => {
         this.cleanGuestRateList();
-        const addRateToState = (resultsArr) => {
+        const addRateToState = (results) => {
             this.setState(({ movieRateList }) => {
-                const newList = [...movieRateList, ...resultsArr];
+                const newList = [...movieRateList, ...results];
                 return {
                     movieRateList: newList,
                     onloadingRate: false,

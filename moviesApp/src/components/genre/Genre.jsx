@@ -2,9 +2,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const getGenreTitle = (genreArr, genresListPattern) => {
+const getGenreTitle = (genreList, genresListPattern) => {
   const result = [];
-  genreArr.forEach((genId) => {
+  genreList.forEach((genId) => {
     genresListPattern.forEach(
       ({ id, name }) => id === genId && result.push(name)
     );
@@ -13,12 +13,12 @@ const getGenreTitle = (genreArr, genresListPattern) => {
   return result.slice(0, 3);
 };
 
-const Genre = ({ genreArr, id, genresListPattern, onFailGenres }) => {
-  const finallGenreArr = getGenreTitle(genreArr, genresListPattern);
+const Genre = ({ genreList, id, genresListPattern, onFailGenres }) => {
+  const finallGenreList = getGenreTitle(genreList, genresListPattern);
 
   return (
     <div className="genre">
-      {finallGenreArr.map((genre) => (
+      {finallGenreList.map((genre) => (
         <p key={`${id}-${genre}`} className="genre__text">
           {genre}
         </p>
@@ -28,7 +28,7 @@ const Genre = ({ genreArr, id, genresListPattern, onFailGenres }) => {
 };
 
 Genre.propTypes = {
-  genreArr: PropTypes.arrayOf(PropTypes.number).isRequired,
+  genreList: PropTypes.arrayOf(PropTypes.number).isRequired,
   id: PropTypes.number.isRequired,
   genresListPattern: PropTypes.arrayOf(PropTypes.object).isRequired,
   onFailGenres: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),

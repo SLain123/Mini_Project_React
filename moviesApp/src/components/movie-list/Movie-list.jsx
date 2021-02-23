@@ -15,14 +15,6 @@ const MainContent = ({
     onloadingRate,
     onFailDownloadRate,
 }) => {
-    if (onloadingRate && workMode === 'Rated') {
-        return <Spin tip='Loading...' size='large' />;
-    }
-
-    if (onFailDownloadRate && workMode === 'Rated') {
-        return <ErrorMessage error={onFailDownloadRate} />;
-    }
-
     const movieList = workMode === 'Search' ? movieSearchList : movieRateList;
     const pagination =
         workMode === 'Search' ? (
@@ -50,6 +42,7 @@ const MainContent = ({
             <MovieItem {...movie} movieRateList={movieRateList} />
         </Col>
     ));
+
     const searchResult =
         movieList.length > 0 ? (
             <>
@@ -59,6 +52,14 @@ const MainContent = ({
         ) : (
             nullMessage
         );
+
+    if (onloadingRate && workMode === 'Rated') {
+        return <Spin tip='Loading...' size='large' />;
+    }
+
+    if (onFailDownloadRate && workMode === 'Rated') {
+        return <ErrorMessage error={onFailDownloadRate} />;
+    }
 
     return searchResult;
 };

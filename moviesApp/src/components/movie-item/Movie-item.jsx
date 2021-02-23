@@ -9,7 +9,7 @@ import CyrcleRate from '../cyrcleRate';
 const MovieItem = ({
     poster_path: imgPath,
     title,
-    genre_ids: genreArr,
+    genre_ids: genreList,
     overview,
     release_date: date,
     id,
@@ -44,7 +44,7 @@ const MovieItem = ({
                             {getRightDataFormat(date)}
                         </p>
                         <Genre
-                            genreArr={genreArr}
+                            genreList={genreList}
                             genresListPattern={genresListPattern}
                             onFailGenres={onFailGenres}
                             id={id}
