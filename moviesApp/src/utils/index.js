@@ -12,10 +12,15 @@ const cutsOverview = (text, beforeNum) => {
     return `${resultText}...`;
 };
 
-const getRateStatus = (currentId, movieRateList) => {
+const getRateStatus = (currentId) => {
+    const starsList =
+        JSON.parse(localStorage.getItem('starsList')) !== null
+            ? JSON.parse(localStorage.getItem('starsList'))
+            : [];
+            
     let resultRate = 0;
 
-    movieRateList.forEach(({ id, rating }) => {
+    starsList.forEach(({ id, rating }) => {
         if (id === currentId) {
             resultRate = rating;
         }

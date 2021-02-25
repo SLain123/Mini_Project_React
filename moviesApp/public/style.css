@@ -1,0 +1,14 @@
+body {
+    margin: 0;
+    background-color: #e5e5e5 !important;
+    font-family: 'Inter' !important;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('./fonts/Inter-Regular.woff2') format('woff2');
+    src: url('./fonts/Inter-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}

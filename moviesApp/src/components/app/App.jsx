@@ -1,7 +1,6 @@
+/* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import { debounce } from 'lodash';
-import { Spin } from 'antd';
-import ErrorMessage from '../errorMessage';
 import Tabs from '../tabs';
 import Search from '../search';
 import MovieService from '../../services/movies-service';
@@ -10,12 +9,13 @@ import { ContextProvider } from '../contextProvider';
 
 class App extends Component {
     state = {
-        movieSearchList: [],
-        onloadingSearch: true,
-        onFailSearch: false,
-        searchWord: '',
+        movieList: [],
         page: 1,
         totalResults: null,
+        workMode: 'Search',
+        searchWord: '',
+        onloading: true,
+        onFail: false,
         scroll: false,
         tabs: [
             {
@@ -34,17 +34,19 @@ class App extends Component {
     updateMovieList = debounce((searchWord, searchPage) => {
         MovieService.getMoviesByTitle(searchWord, searchPage)
             .then(({ results, total_results: totalResults, page }) => {
-                this.setState({
-                    movieSearchList: results,
-                    totalResults,
-                    page,
-                    onloadingSearch: false,
-                });
+                if (results.length > 0) {
+                    this.setState({
+                        movieList: results,
+                        totalResults,
+                        page,
+                        onloading: false,
+                    });
+                }
             })
             .catch((error) => {
                 this.setState({
-                    onFailSearch: error,
-                    onloadingSearch: false,
+                    onFail: error,
+                    onloading: false,
                 });
             });
     }, 500);
@@ -54,20 +56,84 @@ class App extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { searchWord, page } = this.state;
+        const { searchWord, page, workMode } = this.state;
 
         if (
             (prevState.searchWord !== searchWord && searchWord) ||
-            prevState.page !== page
+            prevState.page !== page ||
+            prevState.workMode !== workMode
         ) {
-            this.updateMovieList(searchWord, page);
+            if (workMode === 'Search') {
+                this.updateMovieList(searchWord, page);
+            } else {
+                this.getGuestRateList(page);
+            }
         }
     }
+
+    getGuestRateList = (ratePage) => {
+        MovieService.getGuestRateList(ratePage)
+            .then(({ results, page, total_results: totalResults }) => {
+                this.setState({
+                    movieList: results,
+                    page,
+                    onloading: false,
+                    totalResults,
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    onFail: error,
+                    onloading: false,
+                });
+            });
+    };
+
+    setRate = (rating, id) => {
+        MovieService.setRate(rating, id).then(({ success }) => {
+            if (success) {
+                const currentStarsList = JSON.parse(
+                    localStorage.getItem('starsList'),
+                );
+
+                if (currentStarsList !== null) {
+                    const newStarsList = [...currentStarsList];
+                    const doubleIndex = currentStarsList.findIndex(
+                        ({ id: innerId }) => id === innerId,
+                    );
+
+                    if (doubleIndex !== -1) {
+                        newStarsList[doubleIndex] = { id, rating };
+                    } else {
+                        newStarsList.push({ id, rating });
+                    }
+
+                    localStorage.setItem(
+                        'starsList',
+                        JSON.stringify(newStarsList),
+                    );
+                } else {
+                    localStorage.setItem(
+                        'starsList',
+                        JSON.stringify([{ id, rating }]),
+                    );
+                }
+            }
+        });
+    };
+
+    changeWorkMode = (workMode) => {
+        this.setState({
+            workMode,
+            onloading: true,
+            page: 1,
+        });
+    };
 
     changeSearchWord = (searchWord) => {
         if (searchWord !== '' && searchWord.match(/[\S]/) !== null) {
             this.setState({
-                onloadingSearch: true,
+                onloading: true,
             });
         }
 
@@ -80,17 +146,17 @@ class App extends Component {
     changePage = (page) => {
         this.setState({
             page,
-            onloadingSearch: true,
+            onloading: true,
             scroll: true,
         });
         this.scrollToTop();
     };
 
     scrollToTop = () => {
-        const { scroll, onloadingSearch } = this.state;
+        const { scroll, onloading } = this.state;
 
         setTimeout(() => {
-            if (!onloadingSearch && scroll) {
+            if (!onloading && scroll) {
                 document.querySelector('a[href*="#"]').scrollIntoView({
                     behavior: 'smooth',
                     block: 'start',
@@ -106,40 +172,39 @@ class App extends Component {
 
     render() {
         const {
-            movieSearchList,
-            onloadingSearch,
-            onFailSearch,
+            movieList,
+            onloading,
+            onFail,
             searchWord,
             page,
             totalResults,
             tabs,
+            workMode,
         } = this.state;
-
-        const loadContent = onloadingSearch ? (
-            <Spin tip='Loading...' size='large' />
-        ) : (
-            <MovieList
-                movieSearchList={movieSearchList}
-                page={page}
-                totalResults={totalResults}
-                changePage={this.changePage}
-            />
-        );
-
-        const isError = onFailSearch ? (
-            <ErrorMessage error={onFailSearch} />
-        ) : null;
 
         return (
             <ContextProvider>
                 <div className='app'>
-                    <Tabs tabs={tabs} />
+                    <Tabs
+                        tabs={tabs}
+                        workMode={workMode}
+                        changeWorkMode={this.changeWorkMode}
+                    />
                     <Search
                         searchWord={searchWord}
                         changeSearchWord={this.changeSearchWord}
+                        workMode={workMode}
                     />
-                    {loadContent}
-                    {isError}
+                    <MovieList
+                        movieList={movieList}
+                        page={page}
+                        totalResults={totalResults}
+                        changePage={this.changePage}
+                        onloading={onloading}
+                        onFail={onFail}
+                        workMode={workMode}
+                        setRate={this.setRate}
+                    />
                 </div>
             </ContextProvider>
         );

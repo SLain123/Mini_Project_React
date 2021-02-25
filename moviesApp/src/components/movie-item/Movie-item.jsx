@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Rate } from 'antd';
 import { getRightDataFormat, getRateStatus, cutsOverview } from '../../utils';
-import { ContextConsumer } from '../contextProvider';
 import Genre from '../genre';
 import CyrcleRate from '../cyrcleRate';
 
@@ -13,60 +12,47 @@ const MovieItem = ({
     overview,
     release_date: date,
     id,
-    movieRateList,
     vote_average: vote,
+    setRate,
 }) => {
     const imgUrl =
         imgPath === null ? '/sH6030EbSzOUTFFZrpnTdSpeNP0.jpg' : imgPath;
 
     return (
-        <ContextConsumer>
-            {({ setRate, genresListPattern, onFailGenres }) => (
-                <div className='movie-item'>
-                    <picture>
-                        <source
-                            media='(min-width: 1024px)'
-                            srcSet={`https://image.tmdb.org/t/p/w1280${imgUrl}`}
-                        />
-                        <img
-                            className='movie-item__img'
-                            srcSet={`https://image.tmdb.org/t/p/w300${imgUrl}`}
-                            alt='movie logo'
-                            width='183'
-                            height='292'
-                        />
-                    </picture>
-                    <div className='movie-item__info'>
-                        <h2 className='movie-item__title'>
-                            {cutsOverview(title, 40)}
-                        </h2>
-                        <p className='movie-item__data'>
-                            {getRightDataFormat(date)}
-                        </p>
-                        <Genre
-                            genreList={genreList}
-                            genresListPattern={genresListPattern}
-                            onFailGenres={onFailGenres}
-                            id={id}
-                        />
-                    </div>
-                    <p className='movie-item__overview'>
-                        {cutsOverview(overview, 155)}
-                    </p>
-                    <Rate
-                        allowClear={false}
-                        allowHalf
-                        defaultValue={getRateStatus(id, movieRateList)}
-                        className='movie-item__rate'
-                        count={10}
-                        onChange={(num) => {
-                            setRate(num, id);
-                        }}
-                    />
-                    <CyrcleRate vote={vote} />
-                </div>
-            )}
-        </ContextConsumer>
+        <div className='movie-item'>
+            <picture>
+                <source
+                    media='(min-width: 1024px)'
+                    srcSet={`https://image.tmdb.org/t/p/w1280${imgUrl}`}
+                />
+                <img
+                    className='movie-item__img'
+                    srcSet={`https://image.tmdb.org/t/p/w300${imgUrl}`}
+                    alt='movie logo'
+                    width='183'
+                    height='292'
+                />
+            </picture>
+            <div className='movie-item__info'>
+                <h2 className='movie-item__title'>{cutsOverview(title, 40)}</h2>
+                <p className='movie-item__data'>{getRightDataFormat(date)}</p>
+                <Genre genreList={genreList} id={id} />
+            </div>
+            <p className='movie-item__overview'>
+                {cutsOverview(overview, 155)}
+            </p>
+            <Rate
+                allowClear={false}
+                allowHalf
+                defaultValue={getRateStatus(id)}
+                className='movie-item__rate'
+                count={10}
+                onChange={(num) => {
+                    setRate(num, id);
+                }}
+            />
+            <CyrcleRate vote={vote} />
+        </div>
     );
 };
 
@@ -77,8 +63,8 @@ MovieItem.propTypes = {
     overview: PropTypes.string.isRequired,
     release_date: PropTypes.string,
     id: PropTypes.number.isRequired,
-    movieRateList: PropTypes.arrayOf(PropTypes.object).isRequired,
     vote_average: PropTypes.number,
+    setRate: PropTypes.func.isRequired,
 };
 
 MovieItem.defaultProps = {

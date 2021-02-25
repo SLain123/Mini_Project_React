@@ -4,7 +4,6 @@ class MovieService {
     static getMoviesByTitle = (title, needPage = 1) => {
         const correctTitle =
             title === '' || title.match(/[\S]/) === null ? 'return' : title;
-            
         return Request.getRequest(
             `https://api.themoviedb.org/3/search/movie?api_key=174f3d1cd84f12ef2ac5c402cc19a666&query=${correctTitle}&page=${needPage}`,
         );
@@ -25,14 +24,13 @@ class MovieService {
             ),
         );
 
-    static setRate = async (rateNum, movieId) => {
-        const token = localStorage.getItem('token');
-
-        return Request.postRequest(
-            `https://api.themoviedb.org/3/movie/${movieId}/rating?api_key=174f3d1cd84f12ef2ac5c402cc19a666&guest_session_id=${token}`,
-            JSON.stringify({ value: rateNum }),
+    static setRate = async (rateNum, movieId) =>
+        MovieService.returnRightToken().then((token) =>
+            Request.postRequest(
+                `https://api.themoviedb.org/3/movie/${movieId}/rating?api_key=174f3d1cd84f12ef2ac5c402cc19a666&guest_session_id=${token}`,
+                JSON.stringify({ value: rateNum }),
+            ),
         );
-    };
 
     static returnRightToken = async () => {
         const expDate = new Date(localStorage.getItem('expDate'));

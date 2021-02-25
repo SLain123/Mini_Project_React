@@ -2,99 +2,88 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Pagination, Spin } from 'antd';
 import ErrorMessage from '../errorMessage';
-import { ContextConsumer } from '../contextProvider/ContextProvider';
 import MovieItem from '../movie-item';
 
-const MainContent = ({
-    movieSearchList,
-    page,
+const GetContent = ({
+    movieList,
+    starsList,
     totalResults,
     changePage,
     workMode,
-    movieRateList,
-    onloadingRate,
-    onFailDownloadRate,
+    page,
+    setRate,
 }) => {
-    const movieList = workMode === 'Search' ? movieSearchList : movieRateList;
-    const pagination =
-        workMode === 'Search' ? (
-            <Pagination
-                size='small'
-                total={totalResults}
-                current={page}
-                pageSize={20}
-                showSizeChanger={false}
-                onChange={(pageNum) => changePage(pageNum)}
-            />
-        ) : null;
+    if (movieList.length > 0) {
+        const list = movieList.map((movie) => (
+            <Col span={24} md={12} className='gutter-row' key={movie.id}>
+                <MovieItem {...movie} starsList={starsList} setRate={setRate} />
+            </Col>
+        ));
 
-    const nullMessage =
-        workMode === 'Search' ? (
+        return (
+            <>
+                {list}
+                <Pagination
+                    size='small'
+                    total={totalResults}
+                    current={page}
+                    pageSize={20}
+                    showSizeChanger={false}
+                    onChange={(pageNum) => changePage(pageNum)}
+                />
+            </>
+        );
+    }
+
+    if (workMode === 'Search') {
+        return (
             <p className='no-movies'>
                 No movies were found for this search query
             </p>
-        ) : (
-            <p className='no-movies'>No movies that you rated</p>
         );
+    }
+    return <p className='no-movies'>No movies that you rated</p>;
+};
 
-    const movieListItems = movieList.map((movie) => (
-        <Col span={24} md={12} className='gutter-row' key={movie.id}>
-            <MovieItem {...movie} movieRateList={movieRateList} />
-        </Col>
-    ));
+const MovieList = (props) => {
+    const { onloading, onFail } = props;
 
-    const searchResult =
-        movieList.length > 0 ? (
-            <>
-                {movieListItems}
-                {pagination}
-            </>
-        ) : (
-            nullMessage
-        );
-
-    if (onloadingRate && workMode === 'Rated') {
+    if (onloading) {
         return <Spin tip='Loading...' size='large' />;
     }
 
-    if (onFailDownloadRate && workMode === 'Rated') {
-        return <ErrorMessage error={onFailDownloadRate} />;
+    if (onFail) {
+        return <ErrorMessage error={onFail} />;
     }
 
-    return searchResult;
+    return (
+        <Row className='movie-list' gutter={[{ xs: 16, sm: 16, md: 36 }, 35]}>
+            <GetContent {...props} />
+        </Row>
+    );
 };
 
-const MovieList = ({ movieSearchList, page, totalResults, changePage }) => (
-    <ContextConsumer>
-        {({ workMode, movieRateList, onloadingRate, onFailDownloadRate }) => (
-            <Row
-                className='movie-list'
-                gutter={[{ xs: 16, sm: 16, md: 36 }, 35]}
-            >
-                <MainContent
-                    movieSearchList={movieSearchList}
-                    page={page}
-                    totalResults={totalResults}
-                    changePage={changePage}
-                    workMode={workMode}
-                    movieRateList={movieRateList}
-                    onloadingRate={onloadingRate}
-                    onFailDownloadRate={onFailDownloadRate}
-                />
-            </Row>
-        )}
-    </ContextConsumer>
-);
 MovieList.propTypes = {
-    movieSearchList: PropTypes.arrayOf(PropTypes.object).isRequired,
+    onloading: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+        .isRequired,
+    onFail: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+};
+
+GetContent.propTypes = {
+    movieList: PropTypes.arrayOf(PropTypes.object).isRequired,
     page: PropTypes.number,
     totalResults: PropTypes.number,
     changePage: PropTypes.func.isRequired,
+    starsList: PropTypes.arrayOf(PropTypes.object),
+    workMode: PropTypes.string,
+    setRate: PropTypes.func.isRequired,
 };
 
-MovieList.defaultProps = {
+GetContent.defaultProps = {
     page: 1,
     totalResults: 1,
+    starsList: [],
+    workMode: 'Search',
 };
 
 export default MovieList;
