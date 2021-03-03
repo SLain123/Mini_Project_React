@@ -4,7 +4,7 @@ import { Row, Col, Pagination, Spin } from 'antd';
 import ErrorMessage from '../errorMessage';
 import MovieItem from '../movie-item';
 
-const GetContent = ({
+const getContent = ({
     movieList,
     starsList,
     totalResults,
@@ -58,7 +58,7 @@ const MovieList = (props) => {
 
     return (
         <Row className='movie-list' gutter={[{ xs: 16, sm: 16, md: 36 }, 35]}>
-            <GetContent {...props} />
+            {getContent({ ...props })}
         </Row>
     );
 };
@@ -67,23 +67,6 @@ MovieList.propTypes = {
     onloading: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
         .isRequired,
     onFail: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-};
-
-GetContent.propTypes = {
-    movieList: PropTypes.arrayOf(PropTypes.object).isRequired,
-    page: PropTypes.number,
-    totalResults: PropTypes.number,
-    changePage: PropTypes.func.isRequired,
-    starsList: PropTypes.arrayOf(PropTypes.object),
-    workMode: PropTypes.string,
-    setRate: PropTypes.func.isRequired,
-};
-
-GetContent.defaultProps = {
-    page: 1,
-    totalResults: 1,
-    starsList: [],
-    workMode: 'Search',
 };
 
 export default MovieList;

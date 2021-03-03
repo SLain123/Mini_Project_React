@@ -3,7 +3,7 @@ import Request from './request-service';
 class MovieService {
     static getMoviesByTitle = (title, needPage = 1) => {
         const correctTitle =
-            title === '' || title.match(/[\S]/) === null ? 'return' : title;
+            title === '' || title.match(/[\S]/) === null ? 'bat' : title;
         return Request.getRequest(
             `https://api.themoviedb.org/3/search/movie?api_key=174f3d1cd84f12ef2ac5c402cc19a666&query=${correctTitle}&page=${needPage}`,
         );

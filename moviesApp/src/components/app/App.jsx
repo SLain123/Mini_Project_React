@@ -51,7 +51,8 @@ class App extends Component {
     }, 500);
 
     componentDidMount() {
-        this.updateMovieList('return', 1);
+        MovieService.returnRightToken();
+        this.updateMovieList('bat', 1);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -71,21 +72,23 @@ class App extends Component {
     }
 
     getGuestRateList = (ratePage) => {
-        MovieService.getGuestRateList(ratePage)
-            .then(({ results, page, total_results: totalResults }) => {
-                this.setState({
-                    movieList: results,
-                    page,
-                    onloading: false,
-                    totalResults,
+        setTimeout(() => {
+            MovieService.getGuestRateList(ratePage)
+                .then(({ results, page, total_results: totalResults }) => {
+                    this.setState({
+                        movieList: results,
+                        page,
+                        onloading: false,
+                        totalResults,
+                    });
+                })
+                .catch((error) => {
+                    this.setState({
+                        onFail: error,
+                        onloading: false,
+                    });
                 });
-            })
-            .catch((error) => {
-                this.setState({
-                    onFail: error,
-                    onloading: false,
-                });
-            });
+        }, 1000);
     };
 
     setRate = (rating, id) => {
@@ -117,6 +120,8 @@ class App extends Component {
                         JSON.stringify([{ id, rating }]),
                     );
                 }
+            } else {
+                console.log('error adding');
             }
         });
     };
