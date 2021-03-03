@@ -26,4 +26,4 @@ Runs eslint with fix.
 
 Runs prettier with formating code.
 
-Build project: https://movies-app.slain123.vercel.app/
+Build project: https://movie-app-2zvte1i21-slain123.vercel.app/
